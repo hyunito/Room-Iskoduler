@@ -1,4 +1,3 @@
-// data/RoomLinkedList.java
 package data;
 import model.Room;
 

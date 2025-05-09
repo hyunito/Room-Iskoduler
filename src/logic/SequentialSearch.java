@@ -1,4 +1,4 @@
-// logic/SequentialSearch.java
+
 package data;
 import model.Room;
 

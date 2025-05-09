@@ -1,4 +1,3 @@
-// data/RoomNode.java
 package data;
 import model.Room;
 
