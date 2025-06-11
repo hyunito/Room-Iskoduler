@@ -3,15 +3,21 @@ package main;
 
 import data.RoomLinkedList;
 import model.LaboratoryRoom;
+import model.Room;
 import data.RoomNode;
 
 
 public class Main {
     public static void main(String[] args) {
-        LaboratoryRoom lab = new LaboratoryRoom("S501", 40, 30);
+
+
         RoomLinkedList rooms = new RoomLinkedList();
-        RoomNode node = new RoomNode(lab);
-        rooms.add(lab);
+        // Creating and adding rooms dynamically
+        rooms.add(new LaboratoryRoom("S501", 40));
+        rooms.add(new LaboratoryRoom("S502", 40));
+        rooms.add(new LaboratoryRoom("S503", 40));
+        rooms.add(new LaboratoryRoom("S504", 40));
+        rooms.add(new Room("S504"));
         rooms.displayAllRooms();
     }
 }

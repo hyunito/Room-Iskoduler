@@ -3,8 +3,8 @@ package model;
 public class LaboratoryRoom extends Room {
     private int workingPCs;
 
-    public LaboratoryRoom(String roomName, int chairs, int workingPCs) {
-        super(roomName, chairs);
+    public LaboratoryRoom(String roomName, int workingPCs) {
+        super(roomName);
         this.workingPCs = workingPCs;
     }
 }
