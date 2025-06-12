@@ -12,7 +12,6 @@ public class Main {
 
 
         RoomLinkedList rooms = new RoomLinkedList();
-        // Creating and adding rooms dynamically
         rooms.add(new LaboratoryRoom("S501", 40));
         rooms.add(new LaboratoryRoom("S502", 40));
         rooms.add(new LaboratoryRoom("S503", 40));
