@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up Form Try</title>
+    <link rel="stylesheet" href="signintest.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet" />
+      
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+
+
+
+    <div class="header">
+      <img class="logo" src="/assets/iskoduler.png" alt="Iskoduler Logo" />
+    </div>
+
+    <div class="line"> 
+        <span class="l1"></span>
+        <span class="l2"></span>
+        <span class="l3"></span>
+    </div>
+   
+
+
+    <div class="container">
+        <div class="signin-banner">
+                <button class="back-button"><a href="indextest.html"><-</a></button>
+                <h1>Sign up</h1>
+                <div class="underline"></div>
+            </div>
+
+
+
+        <div class="left-form-container">
+           
+             <div class="form-group">
+                    <label for="username" class="form-label">Username</label>
+                <div class="input-container">
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        class="form-input" 
+                        placeholder="example#1234"
+                        required
+                        autocomplete="username"
+                    >
+                </div>
+                <div class="error-message" id="usernameError"></div>
+                <div class="username-requirements">Username must be 3-20 characters, letters, numbers, and # allowed</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-container">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-input password-input with-icon" 
+                        placeholder="••••••••"
+                        required
+                        autocomplete="new-password"
+                    >
+                    <button type="button" class="toggle-password" data-target="password">
+                        <svg class="eye-off-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                        <svg class="eye-icon" style="display: none;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="error-message" id="passwordError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword" class="form-label">Confirm Password</label>
+                <div class="input-container">
+                    <input 
+                        type="password" 
+                        id="confirmPassword" 
+                        name="confirmPassword" 
+                        class="form-input password-input with-icon" 
+                        placeholder="••••••••"
+                        required
+                        autocomplete="new-password"
+                    >
+                    <button type="button" class="toggle-password" data-target="confirmPassword">
+                        <svg class="eye-off-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                        <svg class="eye-icon" style="display: none;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="error-message" id="confirmPasswordError"></div>
+                <div class="success-message" id="confirmPasswordSuccess"></div>
+            </div>
+
+
+                <div class="right-form-container">
+                
+                <div class="right-forms">
+                        <div class="email-form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="example@gmail.com">
+                    </div>
+                </div>
+                    
+                
+                
+                <div class="right-forms"> 
+                    <div class="checkbox-group">
+                    <input type="checkbox" id="terms" name="terms">
+                    <label for="terms">Read the Rules and be aware of all the rules and tick the box if you accept the rules</label>
+                </div>
+                </div>
+
+                
+                    
+                <div class="right-forms"> 
+                <button type="submit" class="create-account-btn">Create Account</button>
+                </div>
+               
+
+                <div class="right-forms"> 
+                <div class="login-link">
+                
+                    <p>Do you have an account? <a href="indextest.html" onclick="showLogin()">Log in </a></p>
+
+                    </H1></a>
+                </div>
+                </form>
+            </div>
+
+                </div>
+                
+               
+                <div class="quotes">
+          <h1 class="quotes-upper"><br /></h1>
+       
+    </div>
+    </div>
+
+
+    <script>
+        // Password visibility toggle functionality
+          document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent any default button behavior
+                const targetId = this.getAttribute('data-target');
+                const targetInput = document.getElementById(targetId);
+                const eyeIcon = this.querySelector('.eye-icon');
+                const eyeOffIcon = this.querySelector('.eye-off-icon');
+                
+                // Toggle the input type
+                if (targetInput.type === 'password') {
+                    targetInput.type = 'text';
+                    eyeIcon.style.display = 'none';
+                    eyeOffIcon.style.display = 'block';
+                } else {
+                    targetInput.type = 'password';
+                    eyeIcon.style.display = 'block';
+                    eyeOffIcon.style.display = 'none';
+                }
+            });
+        });
+
+        // Form validation
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const usernameError = document.getElementById('usernameError');
+        const passwordError = document.getElementById('passwordError');
+        const confirmPasswordError = document.getElementById('confirmPasswordError');
+        const confirmPasswordSuccess = document.getElementById('confirmPasswordSuccess');
+        const submitBtn = document.getElementById('submitBtn');
+
+        function validateUsername() {
+            const username = usernameInput.value;
+            const usernameRegex = /^[a-zA-Z0-9#]{3,20}$/;
+
+            if (username.length < 3) {
+                usernameError.textContent = 'Username must be at least 3 characters long';
+                usernameError.style.display = 'block';
+                return false;
+            } else if (username.length > 20) {
+                usernameError.textContent = 'Username must be no more than 20 characters';
+                usernameError.style.display = 'block';
+                return false;
+            } else if (!usernameRegex.test(username)) {
+                usernameError.textContent = 'Username can only contain letters, numbers, and #';
+                usernameError.style.display = 'block';
+                return false;
+            } else {
+                usernameError.style.display = 'none';
+                return true;
+            }
+        }
+
+        function validatePassword() {
+            const password = passwordInput.value;
+            const minLength = 8;
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasNumbers = /\d/.test(password);
+
+            if (password.length < minLength) {
+                passwordError.textContent = 'Password must be at least 8 characters long';
+                passwordError.style.display = 'block';
+                return false;
+            } else if (!hasUpperCase || !hasLowerCase || !hasNumbers) {
+                passwordError.textContent = 'Password must contain uppercase, lowercase, and numbers';
+                passwordError.style.display = 'block';
+                return false;
+            } else {
+                passwordError.style.display = 'none';
+                return true;
+            }
+        }
+
+        function validateConfirmPassword() {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            if (confirmPassword === '') {
+                confirmPasswordError.style.display = 'none';
+                confirmPasswordSuccess.style.display = 'none';
+                return false;
+            } else if (password !== confirmPassword) {
+                confirmPasswordError.textContent = 'Passwords do not match';
+                confirmPasswordError.style.display = 'block';
+                confirmPasswordSuccess.style.display = 'none';
+                return false;
+            } else {
+                confirmPasswordError.style.display = 'none';
+                confirmPasswordSuccess.textContent = 'Passwords match!';
+                confirmPasswordSuccess.style.display = 'block';
+                return true;
+            }
+        }
+
+        function updateSubmitButton() {
+            const isUsernameValid = validateUsername();
+            const isPasswordValid = validatePassword();
+            const isConfirmPasswordValid = validateConfirmPassword();
+            
+            if (isUsernameValid && isPasswordValid && isConfirmPasswordValid) {
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.disabled = true;
+            }
+        }
+
+        // Real-time validation
+        usernameInput.addEventListener('input', updateSubmitButton);
+        passwordInput.addEventListener('input', updateSubmitButton);
+        confirmPasswordInput.addEventListener('input', updateSubmitButton);
+
+        // Form submission
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (validateUsername() && validatePassword() && validateConfirmPassword()) {
+                alert('Account created successfully!');
+                console.log('Registration form submitted:', {
+                    username: usernameInput.value,
+                    password: passwordInput.value
+                });
+                // Here you would typically send the data to your server
+            }
+        });
+
+        // Initial button state
+        updateSubmitButton();
+
+        // Username formatting helper
+        usernameInput.addEventListener('input', function() {
+            // Remove any characters that aren't letters, numbers, or #
+            this.value = this.value.replace(/[^a-zA-Z0-9#]/g, '');
+        });
+    </script>
+</body>
+</html>
