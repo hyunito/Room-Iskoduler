@@ -1,5 +1,7 @@
+package logic;
 
-package data;
+import data.RoomLinkedList;
+import data.RoomNode;
 import model.Room;
 
 public class SequentialSearch {
