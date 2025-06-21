@@ -40,6 +40,17 @@ CREATE TABLE bookings (
   CONSTRAINT room_name FOREIGN KEY (room_name) REFERENCES rooms(room_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE inbox_requests (
+  request_id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT,
+  room_name VARCHAR(45),
+  booking_date DATE,
+  start_time TIME,
+  end_time TIME,
+  status ENUM('pending', 'approved') DEFAULT 'pending'
+);
+
+
 
 INSERT INTO users (username, email, password, role) VALUES
 ('admin1', 'admin1@pup.edu.ph', 'admin123', 'admin'),
