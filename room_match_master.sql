@@ -17,32 +17,30 @@ CREATE TABLE users (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE rooms (
-  room_id INT NOT NULL AUTO_INCREMENT,
   room_name VARCHAR(45) NOT NULL,
   room_type ENUM('lecture','laboratory') NOT NULL,
   working_pcs INT DEFAULT NULL, 
   num_chairs INT DEFAULT NUll,
   is_occupied TINYINT DEFAULT 0,
-  PRIMARY KEY (room_id),
+  PRIMARY KEY (room_name),
   UNIQUE KEY room_name_UNIQUE (room_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE bookings (
   booking_id INT NOT NULL AUTO_INCREMENT,
   user_id INT NOT NULL,
-  room_id INT NOT NULL,
+  room_name VARCHAR(45) NOT NULL,
   booking_date DATE NOT NULL,
   start_time TIME NOT NULL,
   end_time TIME NOT NULL,
   PRIMARY KEY (booking_id),
   KEY user_id_idx (user_id),
-  KEY room_id_idx (room_id),
+  KEY room_name_idx (room_name),
   CONSTRAINT user_id FOREIGN KEY (user_id) REFERENCES users(user_id),
-  CONSTRAINT room_id FOREIGN KEY (room_id) REFERENCES rooms(room_id)
+  CONSTRAINT room_name FOREIGN KEY (room_name) REFERENCES rooms(room_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
--- ALTER TABLE room_match_master.users AUTO_INCREMENT = 1;
 INSERT INTO users (username, email, password, role) VALUES
 ('admin1', 'admin1@pup.edu.ph', 'admin123', 'admin'),
 ('admin2', 'admin2@pup.edu.ph', 'admin123', 'admin'),
@@ -52,25 +50,22 @@ INSERT INTO users (username, email, password, role) VALUES
 ('faculty3', 'faculty3@pup.edu.ph', 'faculty123', 'faculty');
 
 
-
-
--- ALTER TABLE room_match_master.rooms AUTO_INCREMENT = 1;
 INSERT INTO rooms (room_name, room_type, working_pcs, num_chairs, is_occupied) VALUES
-('S501', 'laboratory', 35, 55, 0),
-('S502', 'laboratory', 35, 55, 0),
-('S503A', 'laboratory', 35, 55,  0),
-('S503B', 'laboratory', 35, 55, 0),
-('S504', 'laboratory', 35, 55, 0),
+('S501', 'laboratory', 30, 55, 0),
+('S502', 'laboratory', 31, 55, 0),
+('S503A', 'laboratory', 32, 55,  0),
+('S503B', 'laboratory', 23, 55, 0),
+('S504', 'laboratory', 25, 55, 0),
 ('S505', 'laboratory', 35, 55, 0),
-('S508', 'laboratory', 35, 55, 0),
-('S509', 'laboratory', 35, 55, 0),
-('S510', 'laboratory', 35, 55, 0),
-('S511', 'laboratory', 35, 55, 0),
+('S508', 'laboratory', 28, 55, 0),
+('S509', 'laboratory', 36, 55, 0),
+('S510', 'laboratory', 24, 55, 0),
+('S511', 'laboratory', 20, 55, 0),
 ('S512B', 'laboratory', 35, 55, 0),
-('S513', 'laboratory', 35, 55, 0),
-('S515', 'laboratory', 35, 55, 0),
-('S517', 'laboratory', 35, 55, 0),
-('S518', 'laboratory', 35, 55, 0),
+('S513', 'laboratory', 29, 55, 0),
+('S515', 'laboratory', 28, 55, 0),
+('S517', 'laboratory', 30, 55, 0),
+('S518', 'laboratory', 32, 55, 0),
 ('W500', 'Lecture', NULL, NULL,0),
 ('W501', 'Lecture', NULL, NULL,0),
 ('W502', 'Lecture', NULL, NULL,0),
@@ -128,7 +123,8 @@ INSERT INTO rooms (room_name, room_type, working_pcs, num_chairs, is_occupied) V
 ('N518', 'Lecture', NULL, NULL,0);
 
 
-INSERT INTO bookings (user_id, room_id, booking_date, start_time, end_time) VALUES
-(2, 1, '2025-06-14', '10:00:00', '12:00:00');
+INSERT INTO bookings (user_id, room_name, booking_date, start_time, end_time) VALUES
+(2, 'S501', '2025-06-14', '10:00:00', '12:00:00');
+
 
 ALTER TABLE users ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
