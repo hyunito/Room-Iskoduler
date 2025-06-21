@@ -7,4 +7,12 @@ public class LaboratoryRoom extends Room {
         super(roomName);
         this.workingPCs = workingPCs;
     }
+
+    public int getWorkingPCs() {
+        return workingPCs;
+    }
+
+    public void setWorkingPCs(int workingPCs) {
+        this.workingPCs = workingPCs;
+    }
 }

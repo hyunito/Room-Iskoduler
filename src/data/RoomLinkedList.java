@@ -28,4 +28,23 @@ public class RoomLinkedList {
     public RoomNode getHead() {
         return head;
     }
+
+    public Room[] toArray() {
+        int size = 0;
+        RoomNode current = head;
+        while (current != null) {
+            size++;
+            current = current.next;
+        }
+
+        Room[] rooms = new Room[size];
+        current = head;
+        int index = 0;
+        while (current != null) {
+            rooms[index++] = current.data;
+            current = current.next;
+        }
+
+        return rooms;
+    }
 }
