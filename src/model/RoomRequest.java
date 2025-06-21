@@ -11,7 +11,7 @@ public class RoomRequest {
     private Time startTime;
     private int durationMinutes;
 
-    // Add this block below 👇
+
     public int getUserId() { return userId; }
     public void setUserId(int userId) { this.userId = userId; }
 

@@ -13,7 +13,7 @@ public class RoomFinderDAO {
         RoomLinkedList availableRooms = new RoomLinkedList();
 
         try (Connection conn = DBConnection.getConnection()) {
-            // SQL query to fetch available rooms
+
             String sql = """
                 SELECT room_name FROM rooms
                 WHERE room_type = ?

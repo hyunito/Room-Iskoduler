@@ -21,21 +21,20 @@ public class Main {
         System.out.print("Enter password: ");
         String pword = scanner.nextLine();
 
-        // Login and get user role & ID
         String[] loginResult = LoginChecker.loginWithRole(uname, pword);
 
         if (loginResult == null) {
-            System.out.println("❌ Invalid username or password.");
+            System.out.println("Invalid username or password.");
             return;
         }
 
         String role = loginResult[0];
         int userId = Integer.parseInt(loginResult[1]);
 
-        System.out.println("✅ Login successful as " + role + ".");
+        System.out.println("Login successful as " + role + ".");
 
         if (!role.equals("faculty")) {
-            System.out.println("❌ This simulation is only for faculty users.");
+            System.out.println("This simulation is only for faculty users.");
             return;
         }
 
@@ -59,14 +58,14 @@ public class Main {
         System.out.print("Enter duration in minutes: ");
         request.setDurationMinutes(scanner.nextInt());
 
-        System.out.println("\n⏳ Searching for available rooms...");
+        System.out.println("\nSearching for available rooms...");
 
         RoomLinkedList availableRooms = RoomFinderDAO.findAvailableRooms(request);
 
         if (availableRooms.getHead() == null) {
-            System.out.println("❌ No rooms available that match your criteria.");
+            System.out.println("No rooms available that match your criteria.");
         } else {
-            System.out.println("✅ Rooms found:");
+            System.out.println("Rooms found:");
             availableRooms.displayAllRooms();
         }
     }
