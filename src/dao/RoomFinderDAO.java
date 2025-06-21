@@ -16,7 +16,8 @@ public class RoomFinderDAO {
         try (Connection conn = DBConnection.getConnection()) {
 
             String sql = """
-                SELECT room_name, working_pcs FROM rooms
+                SELECT room_name, COALESCE(working_pcs, 0) AS working_pcs FROM rooms
+
                 WHERE room_type = ?
                   AND (working_pcs >= ? OR ? IS NULL)
                   AND is_occupied = 0
@@ -48,8 +49,9 @@ public class RoomFinderDAO {
             while (rs.next()) {
                 String roomName = rs.getString("room_name");
 
+                int pcs = rs.getInt("working_pcs");
+
                 if (request.getRoomType().equals("laboratory")) {
-                    int pcs = rs.getInt("working_pcs");
                     LaboratoryRoom lab = new LaboratoryRoom(roomName, pcs);
                     availableRooms.add(lab);
                 } else {
@@ -57,6 +59,7 @@ public class RoomFinderDAO {
                     availableRooms.add(room);
                 }
             }
+
 
         } catch (Exception e) {
             e.printStackTrace();

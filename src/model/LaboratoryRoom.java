@@ -13,6 +13,7 @@ public class LaboratoryRoom extends Room {
     }
 
     public void setWorkingPCs(int workingPCs) {
+
         this.workingPCs = workingPCs;
     }
 }
