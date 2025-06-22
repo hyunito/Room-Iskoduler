@@ -26,17 +26,12 @@
             border-radius:  0px 0px 0px 50px;
             display: flex;
             justify-content: center;
-            
+            gap: 425px;
             height: 120px;
+            
             align-items: center;
             position: relative;
             z-index: 2 ;
-        }
-
-        logo-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .logo {
@@ -54,9 +49,12 @@
 
         .room-toggle {
             display: flex;
+           
             border-radius: 8px;
             margin-left: -145px;
-            width: 800px; 
+            width: 800px;
+          
+           
         }
 
         .loaded{
@@ -118,21 +116,32 @@
             gap: 50px;
             margin-bottom: 60px;
             align-items: center;
+           
         }
 
         .action-btn {
             background-color: #e8ddd4;
+            
             width: 650px;
-            height: 60px;
+            height: 90px;
             color: #8b1538;
             border: none;
             padding: 15px 30px;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 25px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-family: "Inter", sans-serif;
+
         }
+
+        
+         .action-btn a{
+             text-decoration: none;
+             color: #8b1538;
+         }
+         
 
         .action-btn:hover {
             background-color: #d4c5b8;
