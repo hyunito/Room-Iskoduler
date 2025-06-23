@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-
+        while(true){
         System.out.print("Enter username: ");
         String uname = scanner.nextLine();
 
@@ -21,7 +21,7 @@ public class Main {
 
         if (loginResult == null) {
             System.out.println("Invalid username or password.");
-            return;
+            continue;
         }
 
         String role = loginResult[0];
@@ -33,8 +33,7 @@ public class Main {
             FacultyHandler.handle(userId);
         } else if (role.equals("admin")) {
             AdminHandler.handle(userId);
-        } else {
-            System.out.println("Unrecognized role.");
         }
+    }
     }
 }

@@ -26,7 +26,7 @@
             border-radius:  0px 0px 0px 50px;
             display: flex;
             justify-content: center;
-            gap: 500px;
+            gap: 425px;
             height: 120px;
             
             align-items: center;
@@ -49,39 +49,32 @@
 
         .room-toggle {
             display: flex;
-            background-color: rgba(221, 204, 204, 0.979);
-            
+           
             border-radius: 8px;
             margin-left: -145px;
-            width: 650px;
-            align-items: center;
-         
+            width: 800px;
+          
            
         }
 
-        .toggle-btn {
-            padding: 15px 30px;
-            width: 650px;
-            height: 60px;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 8px;
-            background-color: transparent;
-            color: #8b1538;
-            font-size: 14px;
-            cursor: pointer;
-             align-items: center;
-             align-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .toggle-btn.active {
-            background-color: rgba(139, 21, 21, 0.2);
+        .loaded{
+            
             color: #8b1538;
             font-weight: bold; 
-            width: 900px;
+            width: 800px;
             height: 60px;
+        
+            text-align: center;
             
+        }
+
+        .loaded h1{
+            
+            color: #8b1538;
+            font-weight: 900; 
+            font-size: 50px;
+            
+           
             
         }
 
@@ -115,24 +108,20 @@
 
 
         /* POPPINS TO PAKILAGYAN */
-        .main-title {
-            font-size: 62px;
-            font-weight: bold;
-            margin-top: 150px;;
-            margin-bottom:80px;
-            line-height: 1.2;
-        }
-
+       
         .action-buttons {
             display: flex;
+            margin-top: 10%;
             flex-direction: column;
             gap: 50px;
             margin-bottom: 60px;
             align-items: center;
+           
         }
 
         .action-btn {
             background-color: #e8ddd4;
+            
             width: 650px;
             height: 90px;
             color: #8b1538;
@@ -143,8 +132,16 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-              font-family: "Inter", sans-serif;
+            font-family: "Inter", sans-serif;
+
         }
+
+        
+         .action-btn a{
+             text-decoration: none;
+             color: #8b1538;
+         }
+         
 
         .action-btn:hover {
             background-color: #d4c5b8;

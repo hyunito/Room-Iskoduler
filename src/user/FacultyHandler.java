@@ -30,8 +30,9 @@ public class FacultyHandler {
         System.out.print("Enter booking date (YYYY-MM-DD): ");
         request.setBookingDate(Date.valueOf(scanner.next()));
 
-        System.out.print("Enter start time (HH:MM:SS): ");
-        request.setStartTime(Time.valueOf(scanner.next()));
+        System.out.print("Enter start time (e.g., 3:15PM): ");
+        String startInput = scanner.next();
+        request.setStartTime(parseTime(startInput));
 
         System.out.print("Enter duration in minutes: ");
         request.setDurationMinutes(scanner.nextInt());
@@ -65,5 +66,21 @@ public class FacultyHandler {
 
         RequestInboxDAO.addToInbox(request);
         System.out.println("Your request has been submitted for admin approval.");
+    }
+    private static Time parseTime(String input) {
+        try {
+            input = input.toUpperCase().replaceAll("\s+", "");
+            boolean isPM = input.endsWith("PM");
+            input = input.replace("AM", "").replace("PM", "");
+            String[] parts = input.split(":");
+            int hour = Integer.parseInt(parts[0]);
+            int minute = Integer.parseInt(parts[1]);
+            if (isPM && hour != 12) hour += 12;
+            if (!isPM && hour == 12) hour = 0;
+            return new Time(hour, minute, 0);
+        } catch (Exception e) {
+            System.out.println("Invalid time format. Use HH:MMAM/PM (e.g., 2:30PM).");
+            return new Time(0, 0, 0);
+        }
     }
 }

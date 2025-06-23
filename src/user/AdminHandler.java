@@ -11,39 +11,32 @@ import model.LaboratoryRoom;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Scanner;
 
 public class AdminHandler {
+    private static final Scanner scanner = new Scanner(System.in);
     public static void handle(int userId) {
-        Scanner scanner = new Scanner(System.in);
 
-        System.out.println("1. View Inbox\n2. Approve a Request\n3. Book Room by Search\n4. Book Room Directly");
+        System.out.println("1. View Inbox\n2. Book Room by Search\n3. Book Room Directly");
         System.out.print("Choose action: ");
         int choice = scanner.nextInt();
         scanner.nextLine();
 
         switch (choice) {
-            case 1 -> viewInbox();
-            case 2 -> approveRequest();
-            case 3 -> bookViaSearch(userId);
-            case 4 -> directBooking(userId);
-            default -> System.out.println("Invalid option.");
+            case 1: viewInbox();
+                    break;
+            case 2: bookViaSearch(userId);
+                    break;
+            case 3: directBooking(userId);
+                    break;
+            default:
+                System.out.println("Invalid option.");
         }
     }
 
     private static void viewInbox() {
-        List<RoomRequest> pending = RequestInboxDAO.getAllPending();
-        System.out.println("--- Pending Requests ---");
-        int index = 1;
-        for (RoomRequest req : pending) {
-            System.out.println(index++ + ". User ID: " + req.getUserId() + " | Room: " + req.getChosenRoom() +
-                    " | Date: " + req.getBookingDate() + " | Time: " + req.getStartTime());
-        }
-    }
-
-    private static void approveRequest() {
-        Scanner scanner = new Scanner(System.in);
         List<RoomRequest> pending = RequestInboxDAO.getAllPending();
 
         if (pending.isEmpty()) {
@@ -51,27 +44,40 @@ public class AdminHandler {
             return;
         }
 
-        System.out.println("--- Approve Which Request? ---");
+        System.out.println("--- Pending Requests ---");
+        SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
         for (int i = 0; i < pending.size(); i++) {
             RoomRequest req = pending.get(i);
+            String formattedTime = formatter.format(req.getStartTime());
             System.out.println((i + 1) + ". Room: " + req.getChosenRoom() + " | Date: " + req.getBookingDate() +
-                    " | Time: " + req.getStartTime());
+                    " | Time: " + formattedTime);
         }
 
-        System.out.print("Enter number to approve: ");
+        System.out.print("Enter number to approve or deny: ");
         int index = scanner.nextInt();
-        if (index >= 1 && index <= pending.size()) {
-            RoomRequest selected = pending.get(index - 1);
+        scanner.nextLine();
+
+        if (index < 1 || index > pending.size()) {
+            System.out.println("❌ Invalid selection.");
+            return;
+        }
+
+        RoomRequest selected = pending.get(index - 1);
+
+        System.out.print("Approve (A) or Deny (D)? ");
+        String decision = scanner.nextLine().trim().toUpperCase();
+
+        if (decision.equals("A")) {
             RequestInboxDAO.approveAndBook(selected);
             System.out.println("✅ Request approved and booked.");
+        } else if (decision.equals("D")) {
+            System.out.println("Request denied (no action taken).");
         } else {
-            System.out.println("❌ Invalid selection.");
+            System.out.println("Invalid option.");
         }
     }
 
     private static void bookViaSearch(int userId) {
-        Scanner scanner = new Scanner(System.in);
-
         RoomRequest request = new RoomRequest();
         request.setUserId(userId);
 
@@ -86,8 +92,9 @@ public class AdminHandler {
         System.out.print("Enter booking date (YYYY-MM-DD): ");
         request.setBookingDate(Date.valueOf(scanner.next()));
 
-        System.out.print("Enter start time (HH:MM:SS): ");
-        request.setStartTime(Time.valueOf(scanner.next()));
+        System.out.print("Enter start time (e.g., 2:30PM): ");
+        String startInput = scanner.next();
+        request.setStartTime(parseTime(startInput));
 
         System.out.print("Enter duration in minutes: ");
         request.setDurationMinutes(scanner.nextInt());
@@ -110,18 +117,28 @@ public class AdminHandler {
     }
 
     private static void directBooking(int userId) {
-        Scanner scanner = new Scanner(System.in);
         RoomRequest request = new RoomRequest();
         request.setUserId(userId);
 
-        System.out.print("Enter room name: ");
+        RoomLinkedList allRooms = RoomFinderDAO.getAllUnoccupiedRooms();
+        RoomHashMap roomMap = new RoomHashMap(allRooms);
+
+        System.out.println("Available Rooms:");
+        roomMap.displayAllRoomKeys();
+
+        System.out.print("Enter room name to book: ");
         String roomName = scanner.nextLine();
+        if (!roomMap.contains(roomName)) {
+            System.out.println("Room not found or is currently occupied.");
+            return;
+        }
 
         System.out.print("Enter booking date (YYYY-MM-DD): ");
         request.setBookingDate(Date.valueOf(scanner.next()));
 
-        System.out.print("Enter start time (HH:MM:SS): ");
-        request.setStartTime(Time.valueOf(scanner.next()));
+        System.out.print("Enter start time (e.g., 3:15PM): ");
+        String startInput = scanner.next();
+        request.setStartTime(parseTime(startInput));
 
         System.out.print("Enter duration in minutes: ");
         request.setDurationMinutes(scanner.nextInt());
@@ -130,5 +147,22 @@ public class AdminHandler {
         RequestInboxDAO.bookRoomDirectly(request);
 
         System.out.println("Room " + roomName + " has been booked successfully.");
+    }
+
+    private static Time parseTime(String input) {
+        try {
+            input = input.toUpperCase().replaceAll("\s+", "");
+            boolean isPM = input.endsWith("PM");
+            input = input.replace("AM", "").replace("PM", "");
+            String[] parts = input.split(":");
+            int hour = Integer.parseInt(parts[0]);
+            int minute = Integer.parseInt(parts[1]);
+            if (isPM && hour != 12) hour += 12;
+            if (!isPM && hour == 12) hour = 0;
+            return new Time(hour, minute, 0);
+        } catch (Exception e) {
+            System.out.println("Invalid time format. Use HH:MMAM/PM (e.g., 2:30PM).");
+            return new Time(0, 0, 0);
+        }
     }
 }

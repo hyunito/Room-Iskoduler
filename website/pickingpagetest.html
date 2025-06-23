@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="pickingpage.css" />
+    <link rel="stylesheet" href="pickingpagetest.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -41,8 +41,8 @@
           
             
             <div class="action-buttons">
-                <button class="action-btn">RESERVE A ROOM</button>
-                <button class="action-btn">BACK</button>
+                <button class="action-btn"><a href="ppage2test.html">RESERVE A ROOM</a></button>
+                <button class="action-btn"><a href="homapage.html">BACK</a></button>
             </div>
 
             <!-- Bottom Navigation Icons -->
@@ -75,41 +75,6 @@
         </main>
     </div>
 
-    <script>
-        // Toggle functionality for room status buttons
-        const toggleButtons = document.querySelectorAll('.toggle-btn');
-        
-        toggleButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                toggleButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-            });
-        });
-
-        // Action button functionality
-        const actionButtons = document.querySelectorAll('.action-btn');
-        
-        actionButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                alert(`${button.textContent} clicked!`);
-            });
-        });
-
-        // Bottom icon functionality
-        const iconCircles = document.querySelectorAll('.icon-circle');
-        
-        iconCircles.forEach((icon, index) => {
-            icon.addEventListener('click', () => {
-                const actions = ['Profile', 'Home', 'Calendar'];
-                alert(`${actions[index]} clicked!`);
-            });
-        });
-
-        // Menu icon functionality
-        const menuIcon = document.querySelector('.menu-icon');
-        menuIcon.addEventListener('click', () => {
-            alert('Menu clicked!');
-        });
-    </script>
+   
 </body>
 </html>

@@ -1,10 +1,9 @@
+
 package dao;
 
 import db.DBConnection;
-import model.Room;
-import model.LaboratoryRoom;
+import model.*;
 import data.RoomLinkedList;
-import model.RoomRequest;
 
 import java.sql.*;
 
@@ -17,7 +16,6 @@ public class RoomFinderDAO {
 
             String sql = """
                 SELECT room_name, COALESCE(working_pcs, 0) AS working_pcs FROM rooms
-
                 WHERE room_type = ?
                   AND (working_pcs >= ? OR ? IS NULL)
                   AND is_occupied = 0
@@ -48,7 +46,6 @@ public class RoomFinderDAO {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 String roomName = rs.getString("room_name");
-
                 int pcs = rs.getInt("working_pcs");
 
                 if (request.getRoomType().equals("laboratory")) {
@@ -60,7 +57,32 @@ public class RoomFinderDAO {
                 }
             }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+        return availableRooms;
+    }
+
+    public static RoomLinkedList getAllUnoccupiedRooms() {
+        RoomLinkedList availableRooms = new RoomLinkedList();
+
+        try (Connection conn = DBConnection.getConnection()) {
+            String sql = "SELECT room_name, COALESCE(working_pcs, 0) AS working_pcs, room_type FROM rooms WHERE is_occupied = 0";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String name = rs.getString("room_name");
+                String type = rs.getString("room_type");
+                int pcs = rs.getInt("working_pcs");
+
+                if ("laboratory".equalsIgnoreCase(type)) {
+                    availableRooms.add(new LaboratoryRoom(name, pcs));
+                } else {
+                    availableRooms.add(new Room(name));
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
