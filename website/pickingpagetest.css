@@ -138,46 +138,6 @@
         }
 
         
-.bottom-icons {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .icon-circle {
-            width: 50px;
-            height: 50px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .icon-circle:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
-        }
-
-        .icon {
-            width: 24px;
-            height: 24px;
-            fill: white;
-        }
-
-       
-
-.admin-icon-circle{
-            width: 24px;
-            height: 24px;
-            fill: white;
-}
 
         /* Responsive Design */
         @media (max-width: 768px) {
