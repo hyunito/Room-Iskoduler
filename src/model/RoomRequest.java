@@ -10,7 +10,8 @@ public class RoomRequest {
     private Date bookingDate;
     private Time startTime;
     private int durationMinutes;
-    private String chosenRoom; // ✅ NEW FIELD
+    private String chosenRoom;
+    private int numberOfStudents;
 
     public int getUserId() { return userId; }
     public void setUserId(int userId) { this.userId = userId; }
@@ -30,11 +31,18 @@ public class RoomRequest {
     public int getDurationMinutes() { return durationMinutes; }
     public void setDurationMinutes(int durationMinutes) { this.durationMinutes = durationMinutes; }
 
-    public String getChosenRoom() { return chosenRoom; } // ✅ NEW GETTER
-    public void setChosenRoom(String chosenRoom) { this.chosenRoom = chosenRoom; } // ✅ NEW SETTER
+    public String getChosenRoom() { return chosenRoom; }
+    public void setChosenRoom(String chosenRoom) { this.chosenRoom = chosenRoom; }
 
     public Time calculateEndTime() {
         long millis = startTime.getTime() + (durationMinutes * 60 * 1000);
         return new Time(millis);
+    }
+    public int getNumberOfStudents() {
+        return numberOfStudents;
+    }
+
+    public void setNumberOfStudents(int numberOfStudents) {
+        this.numberOfStudents = numberOfStudents;
     }
 }

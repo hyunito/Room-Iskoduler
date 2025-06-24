@@ -16,27 +16,25 @@ import java.util.List;
 import java.util.Scanner;
 
 public class AdminHandler {
-    private static final Scanner scanner = new Scanner(System.in);
     public static void handle(int userId) {
+        Scanner scanner = new Scanner(System.in);
 
-        System.out.println("1. View Inbox\n2. Book Room by Search\n3. Book Room Directly");
+        System.out.println("1. View Inbox\n2. Book Room by Search\n3. Book Room Directly\n4. Terminate Ongoing Booking");
         System.out.print("Choose action: ");
         int choice = scanner.nextInt();
         scanner.nextLine();
 
         switch (choice) {
-            case 1: viewInbox();
-                    break;
-            case 2: bookViaSearch(userId);
-                    break;
-            case 3: directBooking(userId);
-                    break;
-            default:
-                System.out.println("Invalid option.");
+            case 1 -> viewInbox();
+            case 2 -> bookViaSearch(userId);
+            case 3 -> directBooking(userId);
+            case 4 -> terminateBooking();
+            default -> System.out.println("Invalid option.");
         }
     }
 
     private static void viewInbox() {
+        Scanner scanner = new Scanner(System.in);
         List<RoomRequest> pending = RequestInboxDAO.getAllPending();
 
         if (pending.isEmpty()) {
@@ -71,13 +69,17 @@ public class AdminHandler {
             RequestInboxDAO.approveAndBook(selected);
             System.out.println("✅ Request approved and booked.");
         } else if (decision.equals("D")) {
-            System.out.println("Request denied (no action taken).");
+            RequestInboxDAO.deleteRequest(selected);
+            System.out.println("Request denied and removed.");
         } else {
             System.out.println("Invalid option.");
         }
     }
 
     private static void bookViaSearch(int userId) {
+        System.out.println("⚠ Note: Bookings that overlap with existing ones will be rejected.");
+        Scanner scanner = new Scanner(System.in);
+
         RoomRequest request = new RoomRequest();
         request.setUserId(userId);
 
@@ -114,9 +116,21 @@ public class AdminHandler {
                 System.out.println("Room: " + room.getRoomName());
             }
         }
+        scanner.nextLine();
+        System.out.print("Enter room name to request: ");
+        String chosenRoom = scanner.nextLine().trim();
+
+        request.setChosenRoom(chosenRoom);
+        if (RequestInboxDAO.isOverlappingBooking(request)) {
+            System.out.println("❌ Error: The booking time overlaps with an existing one.");
+        } else {
+            RequestInboxDAO.bookRoomDirectly(request);
+            System.out.println("✅ Room " + roomName + " has been booked successfully.");
+        }
     }
 
     private static void directBooking(int userId) {
+        Scanner scanner = new Scanner(System.in);
         RoomRequest request = new RoomRequest();
         request.setUserId(userId);
 
@@ -129,7 +143,7 @@ public class AdminHandler {
         System.out.print("Enter room name to book: ");
         String roomName = scanner.nextLine();
         if (!roomMap.contains(roomName)) {
-            System.out.println("Room not found or is currently occupied.");
+            System.out.println("Room not found.");
             return;
         }
 
@@ -144,10 +158,59 @@ public class AdminHandler {
         request.setDurationMinutes(scanner.nextInt());
 
         request.setChosenRoom(roomName);
-        RequestInboxDAO.bookRoomDirectly(request);
 
-        System.out.println("Room " + roomName + " has been booked successfully.");
+        if (RequestInboxDAO.isOverlappingBooking(request)) {
+            System.out.println("❌ Error: The booking time overlaps with an existing one.");
+        } else {
+            RequestInboxDAO.bookRoomDirectly(request);
+            System.out.println("✅ Room " + roomName + " has been booked successfully.");
+        }
     }
+
+
+    private static void terminateBooking() {
+        Scanner scanner = new Scanner(System.in);
+        List<RoomRequest> bookings = RequestInboxDAO.getAllCurrentBookings();
+
+        if (bookings.isEmpty()) {
+            System.out.println("There are no active bookings.");
+            return;
+        }
+
+        System.out.println("--- Active Bookings ---");
+        SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
+        for (int i = 0; i < bookings.size(); i++) {
+            RoomRequest req = bookings.get(i);
+            String formattedTime = formatter.format(req.getStartTime());
+            System.out.println((i + 1) + ". Room: " + req.getChosenRoom() +
+                    " | Date: " + req.getBookingDate() + " | Time: " + formattedTime);
+        }
+
+        System.out.print("Enter number to terminate: ");
+        int index = scanner.nextInt();
+        scanner.nextLine();
+
+        if (index < 1 || index > bookings.size()) {
+            System.out.println("❌ Invalid selection.");
+            return;
+        }
+
+        RoomRequest selected = bookings.get(index - 1);
+        boolean success = RequestInboxDAO.terminateSpecificBooking(
+                selected.getChosenRoom(),
+                selected.getBookingDate(),
+                selected.getStartTime()
+        );
+
+        if (success) {
+            System.out.println("✅ Booking for " + selected.getChosenRoom() +
+                    " on " + selected.getBookingDate() + " at " +
+                    formatter.format(selected.getStartTime()) + " has been terminated.");
+        } else {
+            System.out.println("❌ Failed to terminate the booking.");
+        }
+    }
+
 
     private static Time parseTime(String input) {
         try {

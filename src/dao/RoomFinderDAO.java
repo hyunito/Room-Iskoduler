@@ -18,6 +18,7 @@ public class RoomFinderDAO {
                 SELECT room_name, COALESCE(working_pcs, 0) AS working_pcs FROM rooms
                 WHERE room_type = ?
                   AND (working_pcs >= ? OR ? IS NULL)
+                  AND (num_chairs >= ? OR ? IS NULL)
                   AND is_occupied = 0
                   AND room_name NOT IN (
                       SELECT room_name FROM bookings
@@ -34,14 +35,18 @@ public class RoomFinderDAO {
             if (request.getRoomType().equals("laboratory")) {
                 stmt.setInt(2, request.getRequiredPCs());
                 stmt.setInt(3, request.getRequiredPCs());
+                stmt.setInt(4, request.getNumberOfStudents()); // 👈 number of chairs needed
+                stmt.setInt(5, request.getNumberOfStudents());
             } else {
                 stmt.setNull(2, Types.INTEGER);
                 stmt.setNull(3, Types.INTEGER);
+                stmt.setNull(4, Types.INTEGER);
+                stmt.setNull(5, Types.INTEGER);
             }
 
-            stmt.setDate(4, request.getBookingDate());
-            stmt.setTime(5, request.getStartTime());
-            stmt.setTime(6, request.calculateEndTime());
+            stmt.setDate(6, request.getBookingDate());
+            stmt.setTime(7, request.getStartTime());
+            stmt.setTime(8, request.calculateEndTime());
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {

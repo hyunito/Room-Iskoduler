@@ -2,14 +2,20 @@
 package main;
 
 import logic.LoginChecker;
-import user.AdminHandler;
-import user.FacultyHandler;
-
+import user.*;
+import dao.RequestInboxDAO;
 import java.util.Scanner;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(() -> {RequestInboxDAO.cleanExpiredBookings();}, 0, 1, TimeUnit.MINUTES);
+
         while(true){
         System.out.print("Enter username: ");
         String uname = scanner.nextLine();
@@ -35,5 +41,6 @@ public class Main {
             AdminHandler.handle(userId);
         }
     }
+
     }
 }

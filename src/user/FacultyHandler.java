@@ -25,6 +25,9 @@ public class FacultyHandler {
         if (request.getRoomType().equals("laboratory")) {
             System.out.print("Enter required working PCs: ");
             request.setRequiredPCs(scanner.nextInt());
+
+            System.out.print("Enter number of students: ");
+            request.setNumberOfStudents(scanner.nextInt());
         }
 
         System.out.print("Enter booking date (YYYY-MM-DD): ");
