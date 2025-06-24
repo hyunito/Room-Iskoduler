@@ -47,58 +47,8 @@
             margin-top: 2px;
         }
 
-        .room-toggle {
-            display: flex;
-            background-color: rgba(221, 204, 204, 0.979);
-            
-            border-radius: 8px;
-            margin-left: -145px;
-            width: 650px;
-            align-items: center;
-         
-           
-        }
 
-        .toggle-btn {
-            padding: 15px 30px;
-            width: 650px;
-            height: 60px;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 8px;
-            background-color: transparent;
-            color: #8b1538;
-            font-size: 14px;
-            cursor: pointer;
-             align-items: center;
-             align-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .toggle-btn.active {
-            background-color: rgba(139, 21, 21, 0.2);
-            color: #8b1538;
-            font-weight: bold; 
-            width: 900px;
-            height: 60px;
-            
-            
-        }
-
-        .menu-icon {
-            display: flex;
-            flex-direction: column;
-            cursor: pointer;
-            gap: 4px;
-        }
-
-        .menu-line {
-            width: 25px;
-            height: 3px;
-            background-color: #8b1538;
-            border-radius: 2px;
-        }
-
+       
         /* Main Content Section */
         .main-content {
             background-color: #650000;
@@ -143,47 +93,24 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
+            text-decoration: none;
+
         }
 
+        .action-btn a{
+            width: 100%;
+            text-decoration: none;
+             color: #8b1538;
+
+        }
         .action-btn:hover {
             background-color: #d4c5b8;
             transform: translateY(-2px);
         }
 
-        /* Bottom Icons */
-        .bottom-icons {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
+        
 
-        .icon-circle {
-            width: 50px;
-            height: 50px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .icon-circle:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
-        }
-
-        .icon {
-            width: 24px;
-            height: 24px;
-            fill: white;
-        }
-
+     
        
 
 .admin-icon-circle{
@@ -221,7 +148,9 @@
                 padding: 40px 20px 80px;
             }
 
-            .bottom-icons {
-                gap: 30px;
+            .action-btn {
+                width: 80%;
+                font-size: 18px;
+                padding: 10px 20px;
             }
         }
