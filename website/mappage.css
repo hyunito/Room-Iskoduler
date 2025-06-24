@@ -1,0 +1,156 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+
+  }
+
+body{
+    overflow: hidden;
+        color:#650000;
+}
+
+.hidden {
+  display: none !important;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+.container {
+    width: 100%;
+    height: 100vh; 
+    top: 0;
+    position: relative;
+}
+
+.header {
+    background-color: #e8ddd4;
+    border-radius: 0px 0px 0px 50px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    height: 120px;
+    width: 100vw;
+    position: absolute;
+    z-index: 2;
+    gap: 20px;
+}
+
+.logo-section {
+    display: flex;
+    margin: auto;
+    align-items: center;
+    width: 160px;
+    height: 80px;
+}
+
+.login{
+    position:absolute;
+    right: 10px;
+    font-size: 0.8rem;
+    background-color: #d3c2b5;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+
+
+.logo {
+    width: 100%;
+    object-fit: cover;
+}
+
+
+
+body{
+    background-color: #650000;
+}
+
+.map-container {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100vh; /* Or fixed size */
+    z-index: 1;
+}
+
+  
+.map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: top left;
+    cursor: grab;
+}
+
+.lecture, .lab, .faculty{
+    fill: none;
+}
+.lecture:hover, .lab:hover, .faculty:hover {
+    fill: black;
+    fill-opacity: 0.5;
+    cursor: pointer;
+}
+
+.floor {
+    fill: #d3c2b5;
+    transition: fill 0.3s;
+}
+
+.wing {
+    fill: #e8ddd4;
+}
+
+.room-name, .text-room{
+    display: inline;
+}
+
+.side-panel {
+    position: fixed;
+    background-color: #e8ddd4;
+    padding: 2em;
+    top: 130px;
+    left: -400px; /* Start off-screen */
+    width: 350px;
+    height: 80%;
+    border-radius: 20px;
+    z-index: 11;
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+    display: none; /* Initially hidden */
+}
+
+.side-panel.active {
+    transform: translateX(410px); /* Slide into view */
+}
+
+@media screen and (max-width: 768px) {
+    .header {
+        font-size: 80%;
+        height: 100px;
+        gap: 20px;
+        border-radius: 0px 0px 0px 30px;
+        padding: 10px 15px;
+    }
+
+    .logo-section {
+    width: 120px;
+    height: 80px;
+    }
+
+    .login{
+        position:absolute;
+        right: 10px;
+        font-size: 0.5rem;
+        background-color: #d3c2b5;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+
+}
