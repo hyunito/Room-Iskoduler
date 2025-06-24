@@ -19,20 +19,13 @@
         <!-- Header Section -->
         <header class="header">
             <div class="logo-section">
-                <div class="logo">LOGO</div>
+                <div class="logo"><img src="/assets/applogo.png"></div>
                 <div class="logo-subtitle">Book a room to be introduced!</div>
             </div>
             
-            <div class="room-toggle">
-                <button class="toggle-btn active">OCCUPIED ROOMS</button>
-                <button class="toggle-btn">NON-OCCUPIED ROOMS</button>
-            </div>
             
-            <div class="menu-icon">
-                <div class="menu-line"></div>
-                <div class="menu-line"></div>
-                <div class="menu-line"></div>
-            </div>
+            
+           
         </header>
 
         <!-- Main Content Section -->
@@ -40,75 +33,13 @@
             <h1 class="main-title">WHAT ARE YOU LOOKING FOR?</h1>
             
             <div class="action-buttons">
-                <button class="action-btn">SCHEDULE A ROOM</button>
-                <button class="action-btn">SCHEDULED ROOMS</button>
+                <button class="action-btn"><a href="inboxadmintest.html"><p>VIEW INBOX</p> </a></button>
+                <button class="action-btn">VIEW SCHEDULED ROOMS</button>
+                <button class="action-btn">SCHEDULE ROOMS BY SEARCHING</button>
+                <button class="action-btn">DIRECTLY SCHEDULE A ROOMS</button>
             </div>
 
             <!-- Bottom Navigation Icons -->
-            <div class="bottom-icons">
-
-                
-                <div class="icon-circle">
-                     <label for="adminhome" class="adminview"><a href="indextest.html">
-                    <svg class="icon" viewBox="0 0 24 24">
-                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                    </svg>
-                    </a></label>
-                </div>
-                
-                <div class="icon-circle">
-                    <label for="adminhome" class="adminview"><a href="signintest.html">
-                    <svg class="icon" viewBox="0 0 24 24">
-                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                    </svg>
-                      </a></label>
-                </div>
-
-
-                <div class="icon-circle">
-                    <svg class="icon" viewBox="0 0 24 24">
-                        <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
-                    </svg>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <script>
-        // Toggle functionality for room status buttons
-        const toggleButtons = document.querySelectorAll('.toggle-btn');
-        
-        toggleButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                toggleButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-            });
-        });
-
-        // Action button functionality
-        const actionButtons = document.querySelectorAll('.action-btn');
-        
-        actionButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                alert(`${button.textContent} clicked!`);
-            });
-        });
-
-        // Bottom icon functionality
-        const iconCircles = document.querySelectorAll('.icon-circle');
-        
-        iconCircles.forEach((icon, index) => {
-            icon.addEventListener('click', () => {
-                const actions = ['Profile', 'Home', 'Calendar'];
-                alert(`${actions[index]} clicked!`);
-            });
-        });
-
-        // Menu icon functionality
-        const menuIcon = document.querySelector('.menu-icon');
-        menuIcon.addEventListener('click', () => {
-            alert('Menu clicked!');
-        });
-    </script>
+           
 </body>
 </html>
