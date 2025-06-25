@@ -195,61 +195,20 @@ function displayRoomStatus(roomStatus) {
     const roomStatusText = document.querySelector('#room-status-text');
     const roomStatusContainer = document.querySelector('.room-status');
 
-    if (roomNameElement) roomNameElement.textContent = "Room " + roomStatus.roomName;
-
-    let displayType = roomStatus.roomType;
-
-    // If type is "Unknown", try to map it manually
-    if (displayType.toLowerCase() === "unknown") {
-        switch (roomStatus.roomName) {
-            case 'S507':
-                displayType = 'CCMIT Server Room';
-                break;
-            case 'N500':
-                displayType = 'College of Accountancy Faculty Room';
-                break;
-            case 'S516':
-                displayType = 'College of Science Accreditation Center';
-                break;
-            case 'S514':
-                displayType = 'College of Science Faculty Room';
-                break;
-            case 'S506':
-                displayType = 'Curriculum Planning and Development Office';
-                break;
-            case 'E500':
-                displayType = 'JPIA Office';
-                break;
-            case 'S512A':
-                displayType = 'Sci-Tech Research and Development Center';
-                break;
-        }
-    } else if (displayType.toLowerCase() === "lecture") {
-        displayType = "Lecture Room";
-    } else if (displayType.toLowerCase() === "laboratory") {
-        displayType = "Laboratory Room";
-    }
-
-    if (roomTypeElement) roomTypeElement.textContent = displayType;
+    if (roomNameElement) roomNameElement.textContent = roomStatus.roomName;
+    if (roomTypeElement) roomTypeElement.textContent = roomStatus.roomType;
 
     if (roomStatusText && roomStatusContainer) {
-        if (roomStatus.roomType.toLowerCase() === "unknown") {
-            roomStatusText.textContent = '';
-            roomStatusContainer.className = 'room-status';
-        } else {
-            roomStatusText.textContent = roomStatus.statusText;
-            roomStatusContainer.className = `room-status ${roomStatus.occupied ? 'status-occupied' : 'status-available'}`;
-        }
+        roomStatusText.textContent = roomStatus.statusText;
+        roomStatusContainer.className = `room-status ${roomStatus.occupied ? 'status-occupied' : 'status-available'}`;
     }
 }
-
-
 
 
 function displayDefaultRoomInfo(roomName) {
     const roomNameElement = document.querySelector('.room-name');
     const roomTypeElement = document.querySelector('.room-type');
-    const roomStatusElement = document.querySelector('#room-status-text');
+    const roomStatusElement = document.querySelector('#room-status-text'); // use ID
 
     if (roomNameElement) roomNameElement.textContent = roomName;
 
@@ -259,7 +218,7 @@ function displayDefaultRoomInfo(roomName) {
     } else if (roomName.startsWith('S')) {
         roomType = 'Lab Room';
     } else {
-        switch (roomName) {
+         switch (roomName) {
             case 'S507':
                 roomType = 'CCMIT Server Room';
                 break;
@@ -287,14 +246,9 @@ function displayDefaultRoomInfo(roomName) {
     if (roomTypeElement) roomTypeElement.textContent = roomType;
 
     if (roomStatusElement) {
-        if (roomType === "Unknown Room") {
-            roomStatusElement.textContent = '';
-        } else {
-            roomStatusElement.textContent = 'Loading...';
-        }
+        roomStatusElement.textContent = 'Loading...';
     }
 }
-
 
 
 

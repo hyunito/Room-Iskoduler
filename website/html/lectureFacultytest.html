@@ -8,7 +8,7 @@
       rel="stylesheet" />
       <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <title>Lecturer</title>
-    <link rel="stylesheet" href="../css/laboratorytest.css"/>
+    <link rel="stylesheet" href="../css/lectureadmintest.css"/>
 </head>
 <body>
     <div class="container">
@@ -25,30 +25,25 @@
         </header>
 
         <div class="lecturesign">
-             <h1 class="main-title">LABORATORY</h1>
+             <h1 class="main-title">LECTURE</h1>
         </div>
 
 
         <div class="form-container">
             <div class="form-row">
                 <div class="form-group">
-                    <label for="students">No. of Students:</label>
-                    <input type="text" id="students" placeholder="example1234">
-                </div>
-                <div class="form-group">
                     <label for="date">Date:</label>
-                    <input type="text" id="date" placeholder="example1234">
+                    <input type="date" id="date" min="" required>
                 </div>
             </div>
-            
             <div class="form-row">
                 <div class="form-group">
                     <label for="time">Time in:</label>
-                    <input type="text" id="time" placeholder="example1234">
+                    <input type="time" id="time" required>
                 </div>
                 <div class="form-group">
                     <label for="duration">Duration:</label>
-                    <input type="text" id="duration" placeholder="example1234">
+                    <input type="number" id="duration" placeholder="minutes" min="1" required>
                 </div>
             </div>
             
@@ -57,5 +52,16 @@
             </div>
         </div>
     </div>
+    <script>
+    // Set min date to today for the date picker
+    const dateInput = document.getElementById('date');
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const minDate = `${yyyy}-${mm}-${dd}`;
+    dateInput.min = minDate;
+    </script>
+    <script src="../js/lectureFacultytest.js"></script>
 </body>
 </html>

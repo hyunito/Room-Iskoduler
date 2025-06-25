@@ -132,8 +132,8 @@ body {
 }
 
 .quotes {
-  position: fixed;
-  bottom: 0;
+  /* position: fixed; */
+  /* bottom: 0; */
   left: 0;
   width: 100%;
   display: flex;
@@ -143,6 +143,8 @@ body {
   font-size: 35px;
   flex-direction: column;
   background: linear-gradient(to bottom, transparent, black);
+  margin-top: 10px;
+  margin-bottom: 0;
 }
 
 .quotes-upper {
