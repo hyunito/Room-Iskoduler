@@ -256,6 +256,9 @@ function displayDefaultRoomInfo(roomName) {
             case 'S512A':
                 roomType = 'Sci-Tech Research and Development Center';
                 break;
+            default:
+                roomType = 'Unknown Room';
+                break;
         }
     }
 

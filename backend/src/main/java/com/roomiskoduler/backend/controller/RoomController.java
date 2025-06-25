@@ -28,13 +28,29 @@ public class RoomController {
     @GetMapping("/status/{roomName}")
     public RoomStatusResponse getRoomStatus(@PathVariable String roomName) {
         boolean occupied = RoomFinderDAO.isRoomCurrentlyOccupied(roomName);
-        String type = RoomFinderDAO.getRoomType(roomName);
+        String rawType = RoomFinderDAO.getRoomType(roomName);
 
-        if (type != null && !type.isEmpty()) {
-            type = type.substring(0, 1).toUpperCase() + type.substring(1).toLowerCase();
+        Map<String, String> specialNames = new HashMap<>();
+        specialNames.put("S507", "CCMIT Server Room");
+        specialNames.put("N500", "College of Accountancy Faculty Room");
+        specialNames.put("S516", "College of Science Accreditation Center");
+        specialNames.put("S514", "College of Science Faculty Room");
+        specialNames.put("S506", "Curriculum Planning and Development Office");
+        specialNames.put("E500", "JPIA Office");
+        specialNames.put("S512A", "Sci-Tech Research and Development Center");
+
+        String type;
+        String statusText = "";
+
+        if (specialNames.containsKey(roomName)) {
+            type = specialNames.get(roomName);
+            // Leave statusText blank for special rooms
+        } else if (rawType != null && !rawType.isEmpty()) {
+            type = rawType.substring(0, 1).toUpperCase() + rawType.substring(1).toLowerCase() + " Room";
+            statusText = occupied ? "Currently Occupied" : "Available";
+        } else {
+            type = "Unknown Room";
         }
-
-        String statusText = occupied ? "Currently Occupied" : "Available";
 
         RoomStatusResponse response = new RoomStatusResponse();
         response.setRoomName(roomName);
@@ -44,6 +60,8 @@ public class RoomController {
 
         return response;
     }
+
+
 
     @PostMapping("/available-rooms")
     public List<String> getAvailableLectureRooms(@RequestBody RoomRequestPayload payload) {

@@ -1,11 +1,8 @@
-// login.js
-
 document.addEventListener('DOMContentLoaded', function() {
   const loginBtn = document.querySelector('.signup-btn');
   const usernameInput = document.querySelector('input[type="text"]');
   const passwordInput = document.querySelector('input[type="password"]');
 
-  // Create a container for error messages
   let errorMsg = document.createElement('div');
   errorMsg.style.color = 'red';
   errorMsg.style.margin = '10px 0';
@@ -39,6 +36,10 @@ document.addEventListener('DOMContentLoaded', function() {
       const data = await response.json();
 
       if (response.ok) {
+        // Store user information in localStorage
+        localStorage.setItem('userId', data.userId || username);
+        localStorage.setItem('role', data.role);
+        
         // Redirect or show message based on role
         if (data.role === 'admin') {
           window.location.href = 'adminPage.html'; // Change as needed
