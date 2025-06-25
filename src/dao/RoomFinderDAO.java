@@ -1,4 +1,3 @@
-
 package dao;
 
 import db.DBConnection;
@@ -14,19 +13,20 @@ public class RoomFinderDAO {
 
         try (Connection conn = DBConnection.getConnection()) {
 
-            String sql = """
-                SELECT room_name, COALESCE(working_pcs, 0) AS working_pcs FROM rooms
-                WHERE room_type = ?
-                  AND (working_pcs >= ? OR ? IS NULL)
-                  AND (num_chairs >= ? OR ? IS NULL)
-                  AND is_occupied = 0
-                  AND room_name NOT IN (
-                      SELECT room_name FROM bookings
-                      WHERE booking_date = ?
-                      AND (
-                          (? < end_time AND ? >= start_time)
-                      )
-                  )
+            String sql = """ 
+                SELECT room_name, COALESCE(working_pcs, 0) AS working_pcs FROM 
+rooms 
+                WHERE room_type = ? 
+                  AND (working_pcs >= ? OR ? IS NULL) 
+                  AND (num_chairs >= ? OR ? IS NULL) 
+                  AND is_occupied = 0 
+                  AND room_name NOT IN ( 
+                      SELECT room_name FROM bookings 
+                      WHERE booking_date = ? 
+                      AND ( 
+                          (? < end_time AND ? >= start_time) 
+                      ) 
+                  ) 
                 """;
 
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -35,7 +35,7 @@ public class RoomFinderDAO {
             if (request.getRoomType().equals("laboratory")) {
                 stmt.setInt(2, request.getRequiredPCs());
                 stmt.setInt(3, request.getRequiredPCs());
-                stmt.setInt(4, request.getNumberOfStudents()); // 👈 number of chairs needed
+                stmt.setInt(4, request.getNumberOfStudents());
                 stmt.setInt(5, request.getNumberOfStudents());
             } else {
                 stmt.setNull(2, Types.INTEGER);

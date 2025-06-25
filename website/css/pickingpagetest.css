@@ -64,18 +64,7 @@
             
         }
 
-.lecturesign {
-            font-size: 50px;
-            color: #E2DFD2;
-            font-weight: bold;
-            margin-top: 20px;;
-            margin-bottom:50px;
-            line-height: 1.2;
-            text-align: center;
-            font-weight: 35;
-             font-family: "Inter", sans-serif;
 
-        }
         
 
         .menu-icon {
@@ -95,11 +84,11 @@
         }
 
         .form-container {
-            
+          
             padding: 20px;
             max-width: 1500px;
             height: 500px;
-            margin-top: 30px;
+            margin-top: 100px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -107,7 +96,7 @@
         .form-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 50px;
+            margin-bottom: 100px;
         }
 
         .form-group {
@@ -149,46 +138,6 @@
         }
 
         
-.bottom-icons {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .icon-circle {
-            width: 50px;
-            height: 50px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .icon-circle:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
-        }
-
-        .icon {
-            width: 24px;
-            height: 24px;
-            fill: white;
-        }
-
-       
-
-.admin-icon-circle{
-            width: 24px;
-            height: 24px;
-            fill: white;
-}
 
         /* Responsive Design */
         @media (max-width: 768px) {

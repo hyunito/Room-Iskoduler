@@ -47,8 +47,7 @@ public class AdminHandler {
         for (int i = 0; i < pending.size(); i++) {
             RoomRequest req = pending.get(i);
             String formattedTime = formatter.format(req.getStartTime());
-            System.out.println((i + 1) + ". Room: " + req.getChosenRoom() + " | Date: " + req.getBookingDate() +
-                    " | Time: " + formattedTime);
+            System.out.println((i + 1) + ". Room: " + req.getChosenRoom() + " | Date: " + req.getBookingDate() + " | Time: " + formattedTime);
         }
 
         System.out.print("Enter number to approve or deny: ");
@@ -78,7 +77,7 @@ public class AdminHandler {
 
     private static void bookViaSearch(int userId) {
         System.out.println("⚠ Note: Bookings that overlap with existing ones will be rejected.");
-        Scanner scanner = new Scanner(System.in);
+                Scanner scanner = new Scanner(System.in);
 
         RoomRequest request = new RoomRequest();
         request.setUserId(userId);
@@ -101,7 +100,8 @@ public class AdminHandler {
         System.out.print("Enter duration in minutes: ");
         request.setDurationMinutes(scanner.nextInt());
 
-        RoomLinkedList availableRooms = RoomFinderDAO.findAvailableRooms(request);
+        RoomLinkedList availableRooms =
+                RoomFinderDAO.findAvailableRooms(request);
         Room[] roomArray = availableRooms.toArray();
 
         if (request.getRoomType().equals("laboratory")) {
@@ -111,7 +111,8 @@ public class AdminHandler {
         System.out.println("Available Rooms:");
         for (Room room : roomArray) {
             if (room instanceof LaboratoryRoom lab) {
-                System.out.println("Room: " + lab.getRoomName() + " has " + lab.getWorkingPCs() + " PCs");
+                System.out.println("Room: " + lab.getRoomName() + " has " +
+                        lab.getWorkingPCs() + " PCs");
             } else {
                 System.out.println("Room: " + room.getRoomName());
             }
@@ -125,7 +126,7 @@ public class AdminHandler {
             System.out.println("❌ Error: The booking time overlaps with an existing one.");
         } else {
             RequestInboxDAO.bookRoomDirectly(request);
-            System.out.println("✅ Room " + roomName + " has been booked successfully.");
+            System.out.println("✅ Room " + chosenRoom + " has been booked successfully.");
         }
     }
 
@@ -167,7 +168,6 @@ public class AdminHandler {
         }
     }
 
-
     private static void terminateBooking() {
         Scanner scanner = new Scanner(System.in);
         List<RoomRequest> bookings = RequestInboxDAO.getAllCurrentBookings();
@@ -183,7 +183,8 @@ public class AdminHandler {
             RoomRequest req = bookings.get(i);
             String formattedTime = formatter.format(req.getStartTime());
             System.out.println((i + 1) + ". Room: " + req.getChosenRoom() +
-                    " | Date: " + req.getBookingDate() + " | Time: " + formattedTime);
+                    " | Date: " + req.getBookingDate() + " | Time: " +
+                    formattedTime);
         }
 
         System.out.print("Enter number to terminate: ");
@@ -203,14 +204,11 @@ public class AdminHandler {
         );
 
         if (success) {
-            System.out.println("✅ Booking for " + selected.getChosenRoom() +
-                    " on " + selected.getBookingDate() + " at " +
-                    formatter.format(selected.getStartTime()) + " has been terminated.");
+            System.out.println("✅ Booking for " + selected.getChosenRoom() + " on " + selected.getBookingDate() + " at " + formatter.format(selected.getStartTime()) + " has been terminated.");
         } else {
             System.out.println("❌ Failed to terminate the booking.");
         }
     }
-
 
     private static Time parseTime(String input) {
         try {

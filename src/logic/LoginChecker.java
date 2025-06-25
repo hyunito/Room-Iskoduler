@@ -1,4 +1,3 @@
-// logic/LoginChecker.java
 package logic;
 
 import db.DBConnection;
@@ -18,11 +17,12 @@ public class LoginChecker {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                return new String[]{rs.getString("role"), String.valueOf(rs.getInt("user_id"))};
+                return new String[]{rs.getString("role"),
+                        String.valueOf(rs.getInt("user_id"))};
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null; // failed login
+        return null; // failed login 
     }
-}
+} 

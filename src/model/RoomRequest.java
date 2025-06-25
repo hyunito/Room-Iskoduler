@@ -20,19 +20,23 @@ public class RoomRequest {
     public void setRoomType(String roomType) { this.roomType = roomType; }
 
     public int getRequiredPCs() { return requiredPCs; }
-    public void setRequiredPCs(int requiredPCs) { this.requiredPCs = requiredPCs; }
+    public void setRequiredPCs(int requiredPCs) { this.requiredPCs = requiredPCs;
+    }
 
     public Date getBookingDate() { return bookingDate; }
-    public void setBookingDate(Date bookingDate) { this.bookingDate = bookingDate; }
+    public void setBookingDate(Date bookingDate) { this.bookingDate =
+            bookingDate; }
 
     public Time getStartTime() { return startTime; }
     public void setStartTime(Time startTime) { this.startTime = startTime; }
 
     public int getDurationMinutes() { return durationMinutes; }
-    public void setDurationMinutes(int durationMinutes) { this.durationMinutes = durationMinutes; }
+    public void setDurationMinutes(int durationMinutes) { this.durationMinutes =
+            durationMinutes; }
 
     public String getChosenRoom() { return chosenRoom; }
-    public void setChosenRoom(String chosenRoom) { this.chosenRoom = chosenRoom; }
+    public void setChosenRoom(String chosenRoom) { this.chosenRoom = chosenRoom;
+    }
 
     public Time calculateEndTime() {
         long millis = startTime.getTime() + (durationMinutes * 60 * 1000);
@@ -45,4 +49,14 @@ public class RoomRequest {
     public void setNumberOfStudents(int numberOfStudents) {
         this.numberOfStudents = numberOfStudents;
     }
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
 }

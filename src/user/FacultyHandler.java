@@ -7,6 +7,8 @@ import logic.ShellSort;
 import model.Room;
 import model.RoomRequest;
 import model.LaboratoryRoom;
+import java.util.List;
+import java.text.SimpleDateFormat;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -16,6 +18,24 @@ public class FacultyHandler {
     public static void handle(int userId) {
         Scanner scanner = new Scanner(System.in);
 
+        System.out.println("1. Request a Room\n2. View My Booking Requests");
+        System.out.print("Choose option: ");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (choice) {
+            case 1:
+                requestRoom(userId);
+                break;
+            case 2:
+                viewInbox(userId);
+                break;
+            default: System.out.println("Invalid choice.");
+        }
+    }
+
+    private static void requestRoom(int userId) {
+        Scanner scanner = new Scanner(System.in);
         RoomRequest request = new RoomRequest();
         request.setUserId(userId);
 
@@ -40,7 +60,8 @@ public class FacultyHandler {
         System.out.print("Enter duration in minutes: ");
         request.setDurationMinutes(scanner.nextInt());
 
-        RoomLinkedList availableRooms = RoomFinderDAO.findAvailableRooms(request);
+        RoomLinkedList availableRooms =
+                RoomFinderDAO.findAvailableRooms(request);
 
         if (availableRooms.getHead() == null) {
             System.out.println("No rooms available that match your criteria.");
@@ -55,7 +76,8 @@ public class FacultyHandler {
         System.out.println("Available Rooms:");
         for (Room room : roomArray) {
             if (room instanceof LaboratoryRoom lab) {
-                System.out.println("Room: " + lab.getRoomName() + " has " + lab.getWorkingPCs() + " PCs");
+                System.out.println("Room: " + lab.getRoomName() + " has " +
+                        lab.getWorkingPCs() + " PCs");
             } else {
                 System.out.println("Room: " + room.getRoomName());
             }
@@ -70,9 +92,31 @@ public class FacultyHandler {
         RequestInboxDAO.addToInbox(request);
         System.out.println("Your request has been submitted for admin approval.");
     }
+
+    private static void viewInbox(int userId) {
+        List<RoomRequest> inbox = RequestInboxDAO.getUserInbox(userId);
+
+        if (inbox.isEmpty()) {
+            System.out.println("📭 Your inbox is empty.");
+            return;
+        }
+
+        System.out.println("--- Your Booking Requests ---");
+        SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
+        for (RoomRequest req : inbox) {
+            String formattedTime = formatter.format(req.getStartTime());
+            String endTime = formatter.format(new
+                    Time(req.getStartTime().getTime() + req.getDurationMinutes() * 60 * 1000));
+            System.out.println("Room: " + req.getChosenRoom()
+                    + " | Date: " + req.getBookingDate()
+                    + " | Time: " + formattedTime + " – " + endTime
+                    + " | Status: " + req.getStatus());
+        }
+    }
+
     private static Time parseTime(String input) {
         try {
-            input = input.toUpperCase().replaceAll("\s+", "");
+            input = input.toUpperCase().replaceAll("\\s+", "");
             boolean isPM = input.endsWith("PM");
             input = input.replace("AM", "").replace("PM", "");
             String[] parts = input.split(":");

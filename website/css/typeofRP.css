@@ -118,8 +118,8 @@
         .main-title {
             font-size: 62px;
             font-weight: bold;
-            margin-top: 150px;;
-            margin-bottom:80px;
+            margin-top: 20px;;
+            margin-bottom:20px;
             line-height: 1.2;
         }
 
@@ -151,47 +151,102 @@
             transform: translateY(-2px);
         }
 
-        /* Bottom Icons */
-        .bottom-icons {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
+    .banner{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+        gap: 50%;
+        height: 80px;
+        font-size: 100%;
+    }
 
-        .icon-circle {
-            width: 50px;
-            height: 50px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+    .banner h1{
+        color: #E2DFD2;
+        font-size: 50px;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 20px;
+    }
+    .search{
+        background-color: #E2DFD2;
+        border-radius: 8px;
+        color: #8b1538;
+        padding: 5px;
+        width: 19%;
+        margin-top: 20px;
+    }
 
-        .icon-circle:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
-        }
+    .search h2{
+      
+        text-align: center;
+        align-items: center;
+    }
 
-        .icon {
-            width: 24px;
-            height: 24px;
-            fill: white;
-        }
 
+    .room-type-container{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+       
+        gap: 50px;
+        height: 600px;
+        width: 60%;
+        font-size: 100%;
+        background-color: blue;
+    }
+
+   .room-types {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    
+    align-items: center;
+}
+
+.room-card {
+    background-color: #e8ddd4;
+    width: 370px;
+    
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #8b1538;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.room-card:hover {
+    background-color: #d4c5b8;
+}
+
+.laboratorylogo img{
+   
+    margin-top: 600px;
+    display: flex;
+}
+.room-label{
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 65%;
+    color:  #e8ddd4;
+}
+
+
+
+
+
+
+
+
+    
        
 
-.admin-icon-circle{
-            width: 24px;
-            height: 24px;
-            fill: white;
-}
+       
+       
+
 
         /* Responsive Design */
         @media (max-width: 768px) {

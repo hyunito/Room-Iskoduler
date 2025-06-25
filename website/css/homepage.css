@@ -25,20 +25,21 @@
             background-color: #e8ddd4;
             border-radius:  0px 0px 0px 50px;
             display: flex;
-            justify-content: center;
-            gap: 425px;
-            height: 120px;
-            
+            justify-content: left;
+            gap: 500px;
+            height: 120px;    
             align-items: center;
             position: relative;
             z-index: 2 ;
         }
 
-        .logo {
+        .logo img{
             color: #8b1538;
             font-weight: bold;
-            font-size: 24px;
+            width: 100px;
+            height: 100px;
             position: flex;
+            margin-left: 20px;
         }
 
         .logo-subtitle {
@@ -47,50 +48,7 @@
             margin-top: 2px;
         }
 
-        .room-toggle {
-            display: flex;
-           
-            border-radius: 8px;
-            margin-left: -145px;
-            width: 800px;
-          
-           
-        }
-
-        .loaded{
-            
-            color: #8b1538;
-            font-weight: bold; 
-            width: 800px;
-            height: 60px;
         
-            text-align: center;
-            
-        }
-
-        .loaded h1{
-            
-            color: #8b1538;
-            font-weight: 900; 
-            font-size: 50px;
-            
-           
-            
-        }
-
-        .menu-icon {
-            display: flex;
-            flex-direction: column;
-            cursor: pointer;
-            gap: 4px;
-        }
-
-        .menu-line {
-            width: 25px;
-            height: 3px;
-            background-color: #8b1538;
-            border-radius: 2px;
-        }
 
         /* Main Content Section */
         .main-content {
@@ -108,14 +66,21 @@
 
 
         /* POPPINS TO PAKILAGYAN */
-       
+        .main-title {
+            font-size: 62px;
+            font-weight: bold;
+            margin-top: 20px;;
+            margin-bottom:20px;
+            line-height: 1.2;
+        }
+
         .action-buttons {
             display: flex;
-            margin-top: 10%;
             flex-direction: column;
             gap: 50px;
             margin-bottom: 60px;
             align-items: center;
+            width: 100%;
         }
 
         .action-btn {
@@ -130,13 +95,20 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-             font-family: "Inter", sans-serif;
+              font-family: "Inter", sans-serif;
         }
 
         .action-btn:hover {
             background-color: #d4c5b8;
             transform: translateY(-2px);
         }
+
+         .action-btn a{
+            text-decoration: none;
+            color: #8b1538;
+            font-weight: bold;
+            width: 100%;
+         }
 
         /* Bottom Icons */
         .bottom-icons {
@@ -209,7 +181,11 @@
                 padding: 40px 20px 80px;
             }
 
-            .bottom-icons {
-                gap: 30px;
+           .action-btn {
+                width: 80%;
+                font-size: 18px;
+                padding: 10px 20px;
             }
+
+            
         }
