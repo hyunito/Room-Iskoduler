@@ -80,4 +80,57 @@ public class RoomFinderDAO {
 
         return availableRooms;
     }
+    public static Room findRoomByName(String roomName) {
+        try (Connection conn = DBConnection.getConnection()) {
+            String sql = "SELECT room_name, room_type, is_occupied, working_pcs FROM rooms WHERE room_name = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, roomName);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String type = rs.getString("room_type");
+                boolean occupied = rs.getBoolean("is_occupied");
+
+                if ("laboratory".equalsIgnoreCase(type)) {
+                    LaboratoryRoom lab = new LaboratoryRoom(roomName, rs.getInt("working_pcs"));
+                    lab.setOccupied(occupied);
+                    return lab;
+                } else {
+                    Room lecture = new Room(roomName);
+                    lecture.setOccupied(occupied);
+                    return lecture;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public static boolean isRoomCurrentlyOccupied(String roomName) {
+        String sql = "SELECT COUNT(*) FROM bookings WHERE room_name = ? AND booking_date = CURRENT_DATE() AND start_time <= CURRENT_TIME() AND end_time > CURRENT_TIME()";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, roomName);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) return rs.getInt(1) > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static String getRoomType(String roomName) {
+        String sql = "SELECT room_type FROM rooms WHERE room_name = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, roomName);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) return rs.getString("room_type");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "Unknown";
+    }
+
+
 }

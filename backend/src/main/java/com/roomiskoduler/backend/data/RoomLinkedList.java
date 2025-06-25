@@ -1,5 +1,8 @@
 package com.roomiskoduler.backend.data;
+
 import com.roomiskoduler.backend.model.Room;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RoomLinkedList {
     private RoomNode head;
@@ -47,5 +50,14 @@ public class RoomLinkedList {
 
         return rooms;
     }
-}
 
+    public List<Room> toList() {
+        List<Room> list = new ArrayList<>();
+        RoomNode current = head;
+        while (current != null) {
+            list.add(current.data);
+            current = current.next;
+        }
+        return list;
+    }
+}

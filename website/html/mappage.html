@@ -1007,32 +1007,34 @@
         </div>
 
         <div class="side-panel">
-            <div class="container">
-                <h1 class="text-room">Room </h1><h1 class="room-name">S501</h1>
-                <ul>
-                    <li>
-                        <strong>• Type: </strong>
-                        <span class="room-type"></span>
-                    </li>
-                    <li>
-                        <strong>• Status: </strong>
-                        <span class="room-status"></span>
-                    </li>
-                    <li class="date-text">
-                        <strong>Date Scheduled: </strong>
-                        <span class="date-sched"></span>
-                    </li>
-                    <li class="timein-text">
-                        <strong>Time-in: </strong>
-                        <span class="time-in"></span>
-                    </li>
-                    <li class="timeout-text">
-                        <strong>Time-out: </strong>
-                        <span class="time-out"></span>
-                    </li>
-                </ul>
-            </div>
-        </div>
+    <div class="container">
+        <h1 class="text-room">Room </h1><h1 class="room-name">S501</h1>
+        <ul>
+            <li>
+                <strong>• Type: </strong>
+                <span class="room-type"></span>
+            </li>
+            <li>
+                <strong>• Status: </strong>
+                <!-- ✅ Wrap status text inside a span with an ID -->
+                <span class="room-status" id="room-status-text">Loading...</span>
+            </li>
+            <li class="date-text">
+                <strong>Date Scheduled: </strong>
+                <span class="date-sched"></span>
+            </li>
+            <li class="timein-text">
+                <strong>Time-in: </strong>
+                <span class="time-in"></span>
+            </li>
+            <li class="timeout-text">
+                <strong>Time-out: </strong>
+                <span class="time-out"></span>
+            </li>
+        </ul>
+    </div>
+</div>
+
         <script src="../js/map.js"></script>
     </body>
 </html>

@@ -11,5 +11,9 @@ public class Room {
     public String getRoomName() {
         return roomName;
     }
+    public void setOccupied(boolean occupied) {
+        this.isOccupied = occupied;
+    }
+
 
 }

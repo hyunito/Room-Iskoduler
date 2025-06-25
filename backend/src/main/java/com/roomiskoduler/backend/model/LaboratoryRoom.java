@@ -16,4 +16,8 @@ public class LaboratoryRoom extends Room {
 
         this.workingPCs = workingPCs;
     }
+    public void setOccupied(boolean occupied) {
+        this.isOccupied = occupied;
+    }
+
 }

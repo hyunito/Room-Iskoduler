@@ -192,31 +192,33 @@ async function fetchRoomStatus(roomName) {
 function displayRoomStatus(roomStatus) {
     const roomNameElement = document.querySelector('.room-name');
     const roomTypeElement = document.querySelector('.room-type');
-    const roomStatusElement = document.querySelector('.room-status');
-    
+    const roomStatusText = document.querySelector('#room-status-text');
+    const roomStatusContainer = document.querySelector('.room-status');
+
     if (roomNameElement) roomNameElement.textContent = roomStatus.roomName;
     if (roomTypeElement) roomTypeElement.textContent = roomStatus.roomType;
-    
-    if (roomStatusElement) {
-        roomStatusElement.textContent = roomStatus.statusText;
-        roomStatusElement.className = `room-status ${roomStatus.occupied ? 'status-occupied' : 'status-available'}`;
+
+    if (roomStatusText && roomStatusContainer) {
+        roomStatusText.textContent = roomStatus.statusText;
+        roomStatusContainer.className = `room-status ${roomStatus.occupied ? 'status-occupied' : 'status-available'}`;
     }
 }
+
 
 function displayDefaultRoomInfo(roomName) {
     const roomNameElement = document.querySelector('.room-name');
     const roomTypeElement = document.querySelector('.room-type');
-    const roomStatusElement = document.querySelector('.room-status');
-    
+    const roomStatusElement = document.querySelector('#room-status-text'); // use ID
+
     if (roomNameElement) roomNameElement.textContent = roomName;
-    
+
     let roomType = 'Unknown Room';
     if (roomName.startsWith('N') || roomName.startsWith('E') || roomName.startsWith('W')) {
         roomType = 'Lecture Room';
     } else if (roomName.startsWith('S')) {
         roomType = 'Lab Room';
     } else {
-        switch (roomName) {
+         switch (roomName) {
             case 'S507':
                 roomType = 'CCMIT Server Room';
                 break;
@@ -240,14 +242,15 @@ function displayDefaultRoomInfo(roomName) {
                 break;
         }
     }
-    
+
     if (roomTypeElement) roomTypeElement.textContent = roomType;
-    
+
     if (roomStatusElement) {
-        roomStatusElement.textContent = 'Available';
-        roomStatusElement.className = 'room-status status-available';
+        roomStatusElement.textContent = 'Loading...';
     }
 }
+
+
 
 document.addEventListener('click', function(e) {
     if (!sidePanel.classList.contains('active')) return;
