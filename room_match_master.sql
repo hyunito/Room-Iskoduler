@@ -47,7 +47,7 @@ CREATE TABLE inbox_requests (
   booking_date DATE,
   start_time TIME,
   end_time TIME,
-  status ENUM('pending', 'approved') DEFAULT 'pending'
+  status ENUM('pending', 'cancelled', inbox_requests'approved') DEFAULT 'pending'
 );
 
 
@@ -132,10 +132,5 @@ INSERT INTO rooms (room_name, room_type, working_pcs, num_chairs, is_occupied) V
 ('N516', 'Lecture', NULL, NULL,0),
 ('N517', 'Lecture', NULL, NULL,0),
 ('N518', 'Lecture', NULL, NULL,0);
-
-
-INSERT INTO bookings (user_id, room_name, booking_date, start_time, end_time) VALUES
-(2, 'S501', '2025-06-14', '10:00:00', '12:00:00');
-
 
 ALTER TABLE users ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
