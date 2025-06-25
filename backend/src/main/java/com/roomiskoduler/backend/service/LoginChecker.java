@@ -23,6 +23,6 @@ public class LoginChecker {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null; // failed login 
+        return null;
     }
 } 

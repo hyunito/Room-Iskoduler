@@ -13,21 +13,7 @@ public class RoomFinderDAO {
 
         try (Connection conn = DBConnection.getConnection()) {
 
-            String sql = """ 
-                SELECT room_name, COALESCE(working_pcs, 0) AS working_pcs FROM 
-rooms 
-                WHERE room_type = ? 
-                  AND (working_pcs >= ? OR ? IS NULL) 
-                  AND (num_chairs >= ? OR ? IS NULL) 
-                  AND is_occupied = 0 
-                  AND room_name NOT IN ( 
-                      SELECT room_name FROM bookings 
-                      WHERE booking_date = ? 
-                      AND ( 
-                          (? < end_time AND ? >= start_time) 
-                      ) 
-                  ) 
-                """;
+            String sql = "SELECT room_name, COALESCE(working_pcs, 0) AS working_pcs FROM rooms WHERE room_type = ? AND (working_pcs >= ? OR ? IS NULL) AND (num_chairs >= ? OR ? IS NULL) AND is_occupied = 0 AND room_name NOT IN (SELECT room_name FROM bookings WHERE booking_date = ? AND ((? < end_time AND ? >= start_time)))";
 
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, request.getRoomType());
