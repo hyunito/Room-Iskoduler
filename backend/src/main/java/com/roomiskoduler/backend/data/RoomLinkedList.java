@@ -60,4 +60,14 @@ public class RoomLinkedList {
         }
         return list;
     }
+    public List<String> toRoomNames() {
+        List<String> names = new ArrayList<>();
+        RoomNode current = head;
+        while (current != null) {
+            names.add(current.data.getRoomName());
+            current = current.next;
+        }
+        return names;
+    }
+
 }

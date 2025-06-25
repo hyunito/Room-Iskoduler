@@ -16,6 +16,22 @@ const container = document.querySelector('.side-panel, .container');
 let currentRoom = null;
 let isAnimating = false;
 
+const role = localStorage.getItem('role');
+
+window.addEventListener('DOMContentLoaded', () => {
+  const userId = localStorage.getItem('userId');
+  const role = localStorage.getItem('role');
+
+  if (!userId || !role) {
+    window.location.href = 'login.html';
+    return;
+  }
+
+  console.log("User ID:", userId);
+  console.log("Role:", role);
+});
+
+
 function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
 }

@@ -24,7 +24,6 @@ window.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Prepare data for backend
         const data = {
             date,
             time,
@@ -33,7 +32,8 @@ window.addEventListener('DOMContentLoaded', function() {
         };
 
         try {
-            const response = await fetch('/api/available-rooms', {
+            const response = await fetch('http://localhost:8080/api/rooms/available-rooms', {
+
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -58,10 +58,11 @@ window.addEventListener('DOMContentLoaded', function() {
                     li.addEventListener('mouseenter', () => li.style.background = '#e8ddd4');
                     li.addEventListener('mouseleave', () => li.style.background = '');
                     li.addEventListener('click', async () => {
-                        // Send booking request
+                    
                         resultsContainer.innerHTML = 'Booking room...';
                         try {
-                            const bookRes = await fetch('/api/book-room', {
+                            const bookRes = await fetch('http://localhost:8080/api/rooms/book-room', {
+
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json'

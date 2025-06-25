@@ -18,13 +18,21 @@ public class LoginController {
 
         Map<String, Object> response = new HashMap<>();
 
+        // Call the login checker (assumes it returns [role, userId] or null if invalid)
         String[] loginResult = LoginChecker.loginWithRole(username, password);
 
-        if (loginResult != null) {
+        if (loginResult != null && loginResult.length == 2) {
             String role = loginResult[0];
-            int userId = Integer.parseInt(loginResult[1]);
-            response.put("role", role);
-            response.put("userId", userId);
+            int userId;
+
+            try {
+                userId = Integer.parseInt(loginResult[1]);
+                response.put("role", role);
+                response.put("userId", userId);
+            } catch (NumberFormatException e) {
+                response.put("error", "Failed to parse user ID.");
+            }
+
         } else {
             response.put("error", "Invalid credentials");
         }
