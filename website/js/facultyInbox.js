@@ -28,10 +28,10 @@ async function loadBookings() {
         bookingsList.innerHTML = '<div class="loading">Loading your bookings...</div>';
 
         const response = await fetch(`http://localhost:8080/api/rooms/bookings/faculty/${userId}`, {
-, {
             method: 'GET',
-            headers: { 'Content-Type': 'application/json',
-              }
+            headers: {
+                'Content-Type': 'application/json'
+            }
         });
 
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -72,15 +72,11 @@ function displayBookings(bookings) {
         const statusClass = getStatusClass(booking.status);
         const statusText = getStatusText(booking.status);
 
-        const startTime = formatTime(booking.startTime);
-        const endTime = calculateEndTime(booking.startTime, booking.durationMinutes);
-        const bookingDate = formatDate(booking.bookingDate);
-
         return `
             <div class="booking-card ${statusClass}">
                 <div class="booking-header">
                     <div class="room-info">
-                        <h3>${booking.chosenRoom}</h3>
+                        <h3>${booking.roomName}</h3>
                         <span class="room-type">Lecture Room</span>
                     </div>
                     <div class="status-badge ${statusClass}">${statusText}</div>
@@ -89,11 +85,11 @@ function displayBookings(bookings) {
                 <div class="booking-details">
                     <div class="detail-row">
                         <span class="label">Date:</span>
-                        <span class="value">${bookingDate}</span>
+                        <span class="value">${formatDate(booking.date)}</span>
                     </div>
                     <div class="detail-row">
                         <span class="label">Time:</span>
-                        <span class="value">${startTime} - ${endTime}</span>
+                        <span class="value">${formatTime(booking.timeIn)} - ${formatTime(booking.timeOut)}</span>
                     </div>
                 </div>
             </div>`;
@@ -105,7 +101,7 @@ function displayBookings(bookings) {
 function filterBookings(filter) {
     if (!window.allBookings) return;
 
-    let filtered = (filter === 'all')
+    const filtered = (filter === 'all')
         ? window.allBookings
         : window.allBookings.filter(b => b.status.toLowerCase() === filter);
 
@@ -141,15 +137,7 @@ function formatDate(dateStr) {
 function formatTime(timeStr) {
     const [h, m] = timeStr.split(':');
     return new Date(0, 0, 0, h, m).toLocaleTimeString('en-US', {
-        hour: '2-digit', minute: '2-digit'
-    });
-}
-
-function calculateEndTime(start, duration) {
-    const [h, m] = start.split(':').map(Number);
-    const startDate = new Date(0, 0, 0, h, m);
-    const endDate = new Date(startDate.getTime() + duration * 60000);
-    return endDate.toLocaleTimeString('en-US', {
-        hour: '2-digit', minute: '2-digit'
+        hour: '2-digit',
+        minute: '2-digit'
     });
 }
