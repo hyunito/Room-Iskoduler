@@ -120,9 +120,6 @@ scheduleForm.addEventListener('submit', async function(e) {
         userId: parseInt(userId),
         roomType: roomType
         };
-
-        
-        console.log('Sending booking data:', bookingData);
         
         const response = await fetch('http://localhost:8080/api/rooms/book-rooms', {
             method: 'POST',
@@ -135,11 +132,11 @@ scheduleForm.addEventListener('submit', async function(e) {
         const result = await response.json();
         
         if (response.ok && !result.error) {
-            // Success
+  
             showNotification(`Room ${selectedRoom} has been successfully scheduled!`, 'success');
             closeScheduleForm();
         } else {
-            // Handle different error cases
+          
             const errorMessage = result.error || result.message || 'Booking failed';
             
             if (errorMessage.toLowerCase().includes('overlap') || 

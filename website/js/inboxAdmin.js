@@ -18,8 +18,7 @@ const actionButtons = document.getElementById('actionButtons');
 // Initialize the page
 document.addEventListener('DOMContentLoaded', function() {
     loadPendingRequests();
-    
-    // Back button functionality
+
     const backBtn = document.getElementById('backBtn');
     if (backBtn) {
         backBtn.addEventListener('click', function(e) {
@@ -29,11 +28,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Load pending requests from backend
+// Load pending requests
 async function loadPendingRequests() {
     try {
         requestsList.innerHTML = '<div class="loading-message">Loading pending requests...</div>';
-        
+
         const response = await fetch('http://localhost:8080/api/rooms/pending-requests', {
             method: 'GET',
             headers: {
@@ -42,27 +41,25 @@ async function loadPendingRequests() {
             }
         });
 
-        if (!response.ok) {
-            throw new Error('Failed to fetch pending requests');
-        }
+        if (!response.ok) throw new Error('Failed to fetch pending requests');
 
         const data = await response.json();
         pendingRequests = Array.isArray(data) ? data : [];
-        
+
         displayRequests();
-        
+
     } catch (error) {
         console.error('Error loading requests:', error);
         requestsList.innerHTML = `
             <div class="loading-message">
-                <p>Error loading requests: ${error.message}</p>
-                <button onclick="loadPendingRequests()" style="margin-top: 10px; padding: 8px 16px; background: #E2DFD2; color: #6b0000; border: none; border-radius: 6px; cursor: pointer;">Retry</button>
+                <p>Error: ${error.message}</p>
+                <button onclick="loadPendingRequests()">Retry</button>
             </div>
         `;
     }
 }
 
-// Display requests in the list
+// Display list of requests
 function displayRequests() {
     if (pendingRequests.length === 0) {
         requestsList.innerHTML = '<div class="loading-message">No pending requests found</div>';
@@ -71,117 +68,67 @@ function displayRequests() {
     }
 
     requestCount.textContent = `${pendingRequests.length} request${pendingRequests.length !== 1 ? 's' : ''}`;
-    
+
     requestsList.innerHTML = pendingRequests.map((request, index) => `
-        <div class="request-card" onclick="selectRequest(${index})" data-request-id="${request.id}">
+        <div class="request-card" onclick="selectRequest(${index})">
             <div class="request-header">
                 <span class="request-id">#${request.id || index + 1}</span>
                 <span class="request-time">${formatDate(request.date)}</span>
             </div>
-            <div class="request-summary">${request.roomName || 'Room'} - ${request.roomType || 'Unknown Type'}</div>
+            <div class="request-summary">${request.roomName} - ${formatRoomType(request.roomType)}</div>
             <div class="request-meta">
                 <span>${request.time || 'N/A'}</span>
                 <span>${request.duration || 'N/A'} min</span>
-                <span>${request.students || 'N/A'} students</span>
+                <span>By ${request.userName || 'Unknown'}</span>
             </div>
         </div>
     `).join('');
 }
 
-// Select a request to view details
+// Handle selection
 function selectRequest(index) {
-    // Remove previous selection
-    document.querySelectorAll('.request-card').forEach(card => {
-        card.classList.remove('selected');
-    });
-    
-    // Add selection to clicked card
+    document.querySelectorAll('.request-card').forEach(card => card.classList.remove('selected'));
     event.target.closest('.request-card').classList.add('selected');
     selectedRequest = pendingRequests[index];
-    
+
     displayRequestDetails(selectedRequest);
     actionButtons.style.display = 'flex';
 }
 
-// Display request details
+// Show request detail
 function displayRequestDetails(request) {
     if (!request) {
         requestDetails.innerHTML = `
             <div class="no-selection">
-                <svg viewBox="0 0 24 24" width="48" height="48">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                </svg>
                 <p>Select a request to view details</p>
             </div>
         `;
         return;
     }
 
-    // Calculate end time
-    const startTime = request.time || 'N/A';
-    const duration = parseInt(request.duration) || 0;
-    const endTime = startTime !== 'N/A' && duration > 0 ? calculateEndTime(startTime, duration) : 'N/A';
+    const endTime = request.time && request.duration ? calculateEndTime(request.time, parseInt(request.duration)) : 'N/A';
 
     requestDetails.innerHTML = `
         <div class="details-content">
-            <div class="detail-item">
-                <span class="detail-label">Room Name:</span>
-                <span class="detail-value">${request.roomName || 'N/A'}</span>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Room Type:</span>
-                <span class="detail-value">${formatRoomType(request.roomType)}</span>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Date:</span>
-                <span class="detail-value">${formatDate(request.date)}</span>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Start Time:</span>
-                <span class="detail-value">${startTime}</span>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">End Time:</span>
-                <span class="detail-value">${endTime}</span>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Duration:</span>
-                <span class="detail-value">${request.duration || 'N/A'} minutes</span>
-            </div>
-            ${request.students ? `
-            <div class="detail-item">
-                <span class="detail-label">Number of Students:</span>
-                <span class="detail-value">${request.students}</span>
-            </div>
-            ` : ''}
-            ${request.pcs ? `
-            <div class="detail-item">
-                <span class="detail-label">Number of PCs:</span>
-                <span class="detail-value">${request.pcs}</span>
-            </div>
-            ` : ''}
-            <div class="detail-item">
-                <span class="detail-label">Requested By:</span>
-                <span class="detail-value">${request.userName || 'Unknown User'}</span>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Request ID:</span>
-                <span class="detail-value">#${request.id || 'N/A'}</span>
-            </div>
+            <div class="detail-item"><span class="detail-label">Room Name:</span> <span class="detail-value">${request.roomName}</span></div>
+            <div class="detail-item"><span class="detail-label">Room Type:</span> <span class="detail-value">${formatRoomType(request.roomType)}</span></div>
+            <div class="detail-item"><span class="detail-label">Date:</span> <span class="detail-value">${formatDate(request.date)}</span></div>
+            <div class="detail-item"><span class="detail-label">Start Time:</span> <span class="detail-value">${request.time}</span></div>
+            <div class="detail-item"><span class="detail-label">End Time:</span> <span class="detail-value">${endTime}</span></div>
+            <div class="detail-item"><span class="detail-label">Duration:</span> <span class="detail-value">${request.duration} minutes</span></div>
+            ${request.students ? `<div class="detail-item"><span class="detail-label">Students:</span> <span class="detail-value">${request.students}</span></div>` : ''}
+            ${request.pcs ? `<div class="detail-item"><span class="detail-label">PCs:</span> <span class="detail-value">${request.pcs}</span></div>` : ''}
+            <div class="detail-item"><span class="detail-label">Requested By:</span> <span class="detail-value">${request.userName}</span></div>
+            <div class="detail-item"><span class="detail-label">Request ID:</span> <span class="detail-value">#${request.id}</span></div>
         </div>
     `;
 }
 
-// Approve a request
+// Approve request
 async function approveRequest() {
-    if (!selectedRequest) {
-        alert('Please select a request first');
-        return;
-    }
+    if (!selectedRequest) return alert('Please select a request first');
 
-    if (!confirm('Are you sure you want to approve this request?')) {
-        return;
-    }
+    if (!confirm('Are you sure you want to approve this request?')) return;
 
     try {
         const response = await fetch('http://localhost:8080/api/rooms/approve-request', {
@@ -196,40 +143,26 @@ async function approveRequest() {
             })
         });
 
-        if (!response.ok) {
-            throw new Error('Failed to approve request');
-        }
+        if (!response.ok) throw new Error('Failed to approve request');
 
-        const result = await response.json();
-        
-        // Show success message
-        showNotification('Request approved successfully!', 'success');
-        
-        // Remove the approved request from the list
+        showNotification('Request approved!', 'success');
+
         pendingRequests = pendingRequests.filter(req => req.id !== selectedRequest.id);
         selectedRequest = null;
-        
-        // Refresh the display
         displayRequests();
         displayRequestDetails(null);
         actionButtons.style.display = 'none';
-        
+
     } catch (error) {
-        console.error('Error approving request:', error);
         showNotification(`Error: ${error.message}`, 'error');
     }
 }
 
-// Reject a request
+// Reject request
 async function rejectRequest() {
-    if (!selectedRequest) {
-        alert('Please select a request first');
-        return;
-    }
+    if (!selectedRequest) return alert('Please select a request first');
 
-    if (!confirm('Are you sure you want to reject this request?')) {
-        return;
-    }
+    if (!confirm('Are you sure you want to reject this request?')) return;
 
     try {
         const response = await fetch('http://localhost:8080/api/rooms/reject-request', {
@@ -244,114 +177,66 @@ async function rejectRequest() {
             })
         });
 
-        if (!response.ok) {
-            throw new Error('Failed to reject request');
-        }
+        if (!response.ok) throw new Error('Failed to reject request');
 
-        const result = await response.json();
-        
-        // Show success message
-        showNotification('Request rejected successfully!', 'success');
-        
-        // Remove the rejected request from the list
+        showNotification('Request rejected!', 'success');
+
         pendingRequests = pendingRequests.filter(req => req.id !== selectedRequest.id);
         selectedRequest = null;
-        
-        // Refresh the display
         displayRequests();
         displayRequestDetails(null);
         actionButtons.style.display = 'none';
-        
+
     } catch (error) {
-        console.error('Error rejecting request:', error);
         showNotification(`Error: ${error.message}`, 'error');
     }
 }
 
-// Utility functions
+// Utils
 function formatDate(dateString) {
-    if (!dateString) return 'N/A';
-    
     try {
         const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        });
-    } catch (error) {
-        return dateString;
-    }
-}
-
-function formatRoomType(roomType) {
-    if (!roomType) return 'N/A';
-    
-    return roomType.charAt(0).toUpperCase() + roomType.slice(1).toLowerCase();
-}
-
-function calculateEndTime(startTime, durationMinutes) {
-    try {
-        const [hours, minutes] = startTime.split(':').map(Number);
-        const startDate = new Date();
-        startDate.setHours(hours, minutes, 0, 0);
-        
-        const endDate = new Date(startDate.getTime() + durationMinutes * 60000);
-        
-        return endDate.toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false
-        });
-    } catch (error) {
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    } catch {
         return 'N/A';
     }
 }
 
+function formatRoomType(type) {
+    return type ? type.charAt(0).toUpperCase() + type.slice(1).toLowerCase() : 'N/A';
+}
+
+function calculateEndTime(startTime, duration) {
+    const [hours, minutes] = startTime.split(':').map(Number);
+    const start = new Date();
+    start.setHours(hours, minutes, 0);
+    const end = new Date(start.getTime() + duration * 60000);
+    return end.toTimeString().slice(0, 5); // HH:mm
+}
+
 function showNotification(message, type = 'info') {
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.style.cssText = `
+    const note = document.createElement('div');
+    note.className = `notification ${type}`;
+    note.style = `
         position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 15px 20px;
-        border-radius: 8px;
+        top: 20px; right: 20px;
+        padding: 12px 18px;
+        background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
         color: white;
-        font-weight: 500;
+        border-radius: 8px;
         z-index: 1000;
-        transform: translateX(100%);
         transition: transform 0.3s ease;
-        max-width: 300px;
-        word-wrap: break-word;
+        transform: translateX(100%);
     `;
-    
-    // Set background color based on type
-    if (type === 'success') {
-        notification.style.backgroundColor = '#4CAF50';
-    } else if (type === 'error') {
-        notification.style.backgroundColor = '#f44336';
-    } else {
-        notification.style.backgroundColor = '#2196F3';
-    }
-    
-    notification.textContent = message;
-    document.body.appendChild(notification);
-    
-    // Animate in
+    note.textContent = message;
+    document.body.appendChild(note);
+
+    setTimeout(() => { note.style.transform = 'translateX(0)'; }, 100);
     setTimeout(() => {
-        notification.style.transform = 'translateX(0)';
-    }, 100);
-    
-    // Remove after 3 seconds
-    setTimeout(() => {
-        notification.style.transform = 'translateX(100%)';
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 300);
+        note.style.transform = 'translateX(100%)';
+        setTimeout(() => document.body.removeChild(note), 300);
     }, 3000);
 }
 
-// Auto-refresh requests every 30 seconds
-setInterval(loadPendingRequests, 30000); 
+// Auto-refresh every 30 seconds
+setInterval(loadPendingRequests, 30000);

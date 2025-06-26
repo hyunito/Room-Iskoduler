@@ -199,25 +199,24 @@ public class RequestInboxDAO {
     }
 
 
-    public static boolean terminateSpecificBooking(String roomName, Date bookingDate, Time startTime) {
+    public static boolean terminateSpecificBooking(int bookingId) {
         try (Connection conn = DBConnection.getConnection()) {
             conn.setAutoCommit(false);
 
-            PreparedStatement deleteBooking = conn.prepareStatement("DELETE FROM bookings WHERE room_name = ? AND booking_date = ? AND start_time = ?");
-            deleteBooking.setString(1, roomName);
-            deleteBooking.setDate(2, bookingDate);
-            deleteBooking.setTime(3, startTime);
-
+            // Delete booking
+            PreparedStatement deleteBooking = conn.prepareStatement(
+                    "DELETE FROM bookings WHERE booking_id = ?"
+            );
+            deleteBooking.setInt(1, bookingId);
             int deletedRows = deleteBooking.executeUpdate();
 
             if (deletedRows > 0) {
-
+                // Update inbox_requests also if applicable
                 PreparedStatement updateInbox = conn.prepareStatement(
-                        "UPDATE inbox_requests SET status = 'Cancelled' WHERE room_name = ? AND booking_date = ? AND start_time = ?"
+                        "UPDATE inbox_requests SET status = 'Cancelled' " +
+                                "WHERE request_id = ?"
                 );
-                updateInbox.setString(1, roomName);
-                updateInbox.setDate(2, bookingDate);
-                updateInbox.setTime(3, startTime);
+                updateInbox.setInt(1, bookingId);  // or adjust this if you also store booking_id there
                 updateInbox.executeUpdate();
 
                 conn.commit();
@@ -230,6 +229,7 @@ public class RequestInboxDAO {
         }
         return false;
     }
+
 
 
     public static void cleanExpiredBookings() {

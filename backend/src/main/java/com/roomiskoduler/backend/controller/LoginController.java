@@ -18,7 +18,6 @@ public class LoginController {
 
         Map<String, Object> response = new HashMap<>();
 
-        // Call the login checker (assumes it returns [role, userId] or null if invalid)
         String[] loginResult = LoginChecker.loginWithRole(username, password);
 
         if (loginResult != null && loginResult.length == 2) {

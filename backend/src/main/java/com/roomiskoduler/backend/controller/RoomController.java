@@ -118,7 +118,6 @@ public class RoomController {
     public List<?> getAvailableRooms(@RequestBody RoomRequestPayload payload) {
         RoomRequest request = new RoomRequest();
 
-        // Set request properties from payload
         request.setRoomType(payload.getRoomType());
 
         try {
@@ -177,6 +176,21 @@ public class RoomController {
 
         return dtos;
     }
+    @PostMapping("/terminate-booking")
+    public ResponseEntity<?> terminateBooking(@RequestBody Map<String, Integer> body) {
+        int bookingId = body.get("bookingId");
+
+        boolean success = RequestInboxDAO.terminateSpecificBooking(bookingId);
+
+        if (success) {
+            return ResponseEntity.ok(Map.of("message", "Terminated successfully"));
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Could not terminate booking."));
+        }
+    }
+
+
 
 
     @GetMapping
