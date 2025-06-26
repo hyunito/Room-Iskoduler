@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Directly Schedule a Room</title>
+    <link rel="stylesheet" href="../css/directScheduleRoom.css" />
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo-section">
+                <img class="logo-img" src="../assets/applogo.png" alt="App Logo">
+                <div class="logo-subtitle">Book a room to be introduced!</div>
+            </div>
+            <a href="adminRole.html" class="back-btn" id="backBtn">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+                <span>Back</span>
+            </a>
+        </header>
+        <main>
+            <section class="room-category">
+                <h2>Laboratory Rooms</h2>
+                <ul class="room-list" id="labRooms">
+                    <!-- Laboratory rooms will be rendered here by JS -->
+                </ul>
+            </section>
+            <section class="room-category">
+                <h2>Lecture Rooms</h2>
+                <ul class="room-list" id="lectureRooms">
+                    <!-- Lecture rooms will be rendered here by JS -->
+                </ul>
+            </section>
+            <div id="scheduleFormContainer" class="modal hidden">
+                <form id="scheduleForm">
+                    <h3 id="selectedRoomTitle"></h3>
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" name="date" required>
+                    <label for="startTime">Start Time:</label>
+                    <input type="time" id="startTime" name="startTime" required>
+                    <label for="duration">Duration:</label>
+                    <input type="number" id="duration" name="duration" placeholder="Minutes" required>
+                    <div class="form-actions">
+                        <button type="submit">Schedule</button>
+                        <button type="button" id="cancelBtn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+    <script src="../js/directScheduleRoom.js"></script>
+</body>
+</html> 

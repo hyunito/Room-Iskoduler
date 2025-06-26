@@ -1,4 +1,4 @@
-package com.roomiskoduler.backend.user;
+/*package com.roomiskoduler.backend.user;
 
 import com.roomiskoduler.backend.dao.RoomFinderDAO;
 import com.roomiskoduler.backend.dao.RequestInboxDAO;
@@ -131,4 +131,4 @@ public class FacultyHandler {
             return new Time(0, 0, 0);
         }
     }
-}
+}*/

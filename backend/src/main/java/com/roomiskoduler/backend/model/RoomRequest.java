@@ -1,4 +1,5 @@
 package com.roomiskoduler.backend.model;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -8,6 +9,7 @@ public class RoomRequest {
     private String roomType;
     private int requiredPCs;
     private Date bookingDate;
+    @JsonFormat
     private Time startTime;
     private int durationMinutes;
     private String chosenRoom;

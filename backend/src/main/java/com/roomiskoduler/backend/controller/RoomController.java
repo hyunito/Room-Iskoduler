@@ -27,6 +27,31 @@ import java.util.Map;
 @CrossOrigin(origins = "*")
 public class RoomController {
 
+    @GetMapping("/scheduled-rooms")
+    public ResponseEntity<List<Map<String, Object>>> getScheduledRooms() {
+        List<Map<String, Object>> bookings = RequestInboxDAO.getAllCurrentBookings();
+        return ResponseEntity.ok(bookings);
+    }
+
+    @PostMapping("/book-rooms")
+    public ResponseEntity<?> bookRoom(@RequestBody RoomRequest roomBooked) {
+        boolean overlap = RequestInboxDAO.isOverlappingBooking(roomBooked);
+        if (overlap) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "Room is already booked during this period."));
+        }
+
+        boolean success = RequestInboxDAO.bookRoomDirectly(roomBooked);
+        if (success) {
+            return ResponseEntity.ok(Map.of("message", "Room successfully booked", "room", roomBooked.getChosenRoom()
+            ));
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to save booking."));
+        }
+    }
+
+
     @PostMapping("/reject-request")
     public ResponseEntity<Map<String, String>> rejectRequest(@RequestBody Map<String, Object> payload) {
         int requestId = (int) payload.get("requestId");

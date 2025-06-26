@@ -1,0 +1,157 @@
+body {
+    background: #932F2B;
+}
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 24px;
+    background: #EADFD6;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    font-family: 'Poppins', sans-serif;
+}
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+}
+.header h1 {
+    font-size: 2rem;
+    font-weight: 600;
+}
+.back-link {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 1rem;
+    transition: color 0.2s;
+}
+.back-link:hover {
+    color: #0056b3;
+}
+.room-category {
+    margin-bottom: 32px;
+}
+.room-category h2 {
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+    color: #333;
+}
+.room-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    list-style: none;
+    padding: 0;
+}
+.room-list li {
+    background: #f5f5f5;
+    border-radius: 8px;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.room-list li:hover {
+    background: #e0eaff;
+    box-shadow: 0 2px 8px rgba(0,123,255,0.08);
+}
+.modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.hidden {
+    display: none !important;
+}
+#scheduleForm {
+    background: #fff;
+    padding: 32px 24px;
+    border-radius: 10px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+#scheduleForm h3 {
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+    color: #007bff;
+}
+#scheduleForm label {
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+#scheduleForm input[type="date"],
+#scheduleForm input[type="time"] {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+.form-actions button {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    background: #007bff;
+    color: #fff;
+    transition: background 0.2s;
+}
+.form-actions button#cancelBtn {
+    background: #aaa;
+}
+.form-actions button:hover {
+    background: #0056b3;
+}
+.form-actions button#cancelBtn:hover {
+    background: #888;
+}
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.logo-img {
+    height: 40px;
+    width: 40px;
+}
+.logo-subtitle {
+    font-size: 1rem;
+    color: #932F2B;
+    font-weight: 500;
+}
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: #932F2B;
+    font-size: 1rem;
+    font-weight: 500;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+}
+.back-btn:hover {
+    background: #e0eaff;
+    color: #0056b3;
+}
+.back-btn svg {
+    fill: currentColor;
+} 

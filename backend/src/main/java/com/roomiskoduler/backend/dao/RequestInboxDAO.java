@@ -5,7 +5,9 @@ import com.roomiskoduler.backend.model.RoomRequest;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RequestInboxDAO {
 
@@ -55,19 +57,23 @@ public class RequestInboxDAO {
         return list;
     }
 
-    public static void bookRoomDirectly(RoomRequest request) {
+    public static boolean bookRoomDirectly(RoomRequest request) {
         try (Connection conn = DBConnection.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO bookings (user_id, room_name, booking_date, start_time, end_time) VALUES (?, ?, ?, ?,?)");
+            String sql = "INSERT INTO bookings (user_id, room_name, booking_date, start_time, end_time) " + "VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, request.getUserId());
             stmt.setString(2, request.getChosenRoom());
             stmt.setDate(3, request.getBookingDate());
             stmt.setTime(4, request.getStartTime());
             stmt.setTime(5, request.calculateEndTime());
-            stmt.executeUpdate();
+            int rowsInserted = stmt.executeUpdate();
+            return rowsInserted > 0;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
+
 
     public static List<RoomRequest> getAllPending() {
         List<RoomRequest> list = new ArrayList<>();
@@ -93,27 +99,36 @@ public class RequestInboxDAO {
         }
         return list;
     }
-    public static List<RoomRequest> getAllCurrentBookings() {
-        List<RoomRequest> list = new ArrayList<>();
+    public static List<Map<String, Object>> getAllCurrentBookings() {
+        List<Map<String, Object>> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM bookings WHERE TIMESTAMP(booking_date, end_time) > NOW() ORDER BY booking_date, start_time";
+        String sql = "SELECT b.*, r.room_type FROM bookings b JOIN rooms r ON b.room_name = r.room_name WHERE TIMESTAMP(booking_date, end_time) > NOW() ORDER BY booking_date, start_time";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                RoomRequest request = new RoomRequest();
-                request.setUserId(rs.getInt("user_id"));
-                request.setChosenRoom(rs.getString("room_name"));
-                request.setBookingDate(rs.getDate("booking_date"));
-                request.setStartTime(rs.getTime("start_time"));
+                Map<String, Object> booking = new HashMap<>();
+                booking.put("bookingId", rs.getInt("booking_id"));
+                booking.put("userId", rs.getInt("user_id"));
+                booking.put("chosenRoom", rs.getString("room_name"));
+                booking.put("bookingDate", rs.getDate("booking_date"));
+
+                Time startTime = rs.getTime("start_time");
+                Time endTime = rs.getTime("end_time");
+
+                booking.put("startTime", startTime);
+                booking.put("endTime", endTime);
 
                 long startMillis = rs.getTime("start_time").getTime();
                 long endMillis = rs.getTime("end_time").getTime();
-                request.setDurationMinutes((int) ((endMillis - startMillis) / (60 * 1000)));
+                int durationMinutes = (int) ((endMillis - startMillis) / (60 * 1000));
+                booking.put("durationMinutes", durationMinutes);
 
-                list.add(request);
+                booking.put("roomType", rs.getString("room_type"));
+
+                list.add(booking);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -121,6 +136,7 @@ public class RequestInboxDAO {
 
         return list;
     }
+
 
 
 

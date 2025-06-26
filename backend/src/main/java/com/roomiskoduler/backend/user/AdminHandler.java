@@ -1,4 +1,4 @@
-package com.roomiskoduler.backend.user;
+/*package com.roomiskoduler.backend.user;
 
 import com.roomiskoduler.backend.dao.*;
 import com.roomiskoduler.backend.data.RoomLinkedList;
@@ -230,4 +230,4 @@ public class AdminHandler {
             return new Time(0, 0, 0);
         }
     }
-}
+}*/

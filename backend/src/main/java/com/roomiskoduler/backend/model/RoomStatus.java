@@ -1,4 +1,4 @@
-package com.roomiskoduler.backend.model;
+/*package com.roomiskoduler.backend.model;
 
 public class RoomStatus {
     private String roomName;
@@ -46,4 +46,4 @@ public class RoomStatus {
     public void setStatusText(String statusText) {
         this.statusText = statusText;
     }
-} 
+} */

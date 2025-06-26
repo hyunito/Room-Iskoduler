@@ -1,8 +1,8 @@
-package com.roomiskoduler.backend.controller;
+/*package com.roomiskoduler.backend.controller;
 
 import com.roomiskoduler.backend.service.*;
 import com.roomiskoduler.backend.dao.RequestInboxDAO;
-import com.roomiskoduler.backend.user.*;
+//import com.roomiskoduler.backend.user.*;
 
 import java.util.Scanner;
 import java.util.concurrent.Executors;
@@ -43,4 +43,4 @@ public class Main {
         }
 
     }
-} 
+} */
