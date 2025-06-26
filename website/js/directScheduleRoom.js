@@ -24,6 +24,32 @@ if (!userId || role !== 'admin') {
     window.location.href = 'login.html';
 }
 
+// Set minimum date to today
+function setMinDate() {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const minDate = `${yyyy}-${mm}-${dd}`;
+    
+    // Set min attribute on date input when form opens
+    const dateInput = document.getElementById('date');
+    if (dateInput) {
+        dateInput.min = minDate;
+    }
+}
+
+// Validate if selected date is not in the past
+function validateDate(selectedDate) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to start of day
+    
+    const selected = new Date(selectedDate);
+    selected.setHours(0, 0, 0, 0); // Reset time to start of day
+    
+    return selected >= today;
+}
+
 function renderRooms(list, rooms) {
     rooms.forEach(room => {
         const li = document.createElement('li');
@@ -37,6 +63,7 @@ function openScheduleForm(room) {
     selectedRoom = room;
     selectedRoomTitle.textContent = `Schedule for Room: ${room}`;
     scheduleForm.reset();
+    setMinDate(); // Set minimum date when form opens
     scheduleFormContainer.classList.remove('hidden');
 }
 
@@ -94,6 +121,12 @@ scheduleForm.addEventListener('submit', async function(e) {
     
     if (!date || !startTime || !duration) {
         showNotification('Please fill in all fields', 'error');
+        return;
+    }
+    
+    // Validate date is not in the past
+    if (!validateDate(date)) {
+        showNotification('Please select today\'s date or a future date', 'error');
         return;
     }
     

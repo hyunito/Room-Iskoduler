@@ -25,6 +25,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
+  position: relative;
 }
 
 .header h1 {
@@ -35,6 +36,42 @@ body {
 .header a{
   color: aliceblue;
   text-decoration: none;
+}
+
+/* Back Button Styles (exactly like lectureRoom.css) */
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #650000;
+    font-weight: 500;
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: rgba(234, 223, 214, 0.9);
+    border: 1px solid rgba(101, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    font-size: 14px;
+    position: absolute;
+    right: 16rem;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.back-btn:hover {
+    background: rgba(234, 223, 214, 1);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.back-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: #650000;
+}
+
+.back-btn span {
+    font-family: 'Poppins', sans-serif;
 }
 
 .welcome-banner {

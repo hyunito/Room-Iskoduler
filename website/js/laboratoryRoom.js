@@ -84,7 +84,7 @@ window.addEventListener('DOMContentLoaded', function () {
           if (isObject && room.roomName && room.workingPCs !== undefined) {
             li.textContent = `${room.roomName} has ${room.workingPCs} working PCs`;
           } else {
-            li.textContent = room; // fallback if it's just a string like "N502"
+            li.textContent = room; 
           }
 
           li.style.cursor = 'pointer';
@@ -119,7 +119,7 @@ window.addEventListener('DOMContentLoaded', function () {
               }
 
               if (bookReply.message?.toLowerCase().includes("sent to admin")) {
-                resultsContainer.innerHTML = `<span style='color:green;'>${bookReply.message}</span>`;
+                resultsContainer.innerHTML = `<span style='color:white;'>${bookReply.message}</span>`;
               } else if (bookReply.message?.toLowerCase().includes("booked")) {
                 resultsContainer.innerHTML = `<span style='color:green;'>${bookReply.message}</span>`;
               } else {

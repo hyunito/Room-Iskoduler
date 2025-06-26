@@ -111,7 +111,7 @@ window.addEventListener('DOMContentLoaded', function () {
       }
 
       if (bookReply.message?.toLowerCase().includes("sent to admin")) {
-        resultsContainer.innerHTML = `<span style='color:green;'>${bookReply.message}</span>`;
+        resultsContainer.innerHTML = `<span style='color:white;'>${bookReply.message}</span>`;
       } else if (bookReply.message?.toLowerCase().includes("booked")) {
         resultsContainer.innerHTML = `<span style='color:green;'>${bookReply.message}</span>`;
       } else {

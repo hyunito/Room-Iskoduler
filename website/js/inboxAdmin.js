@@ -1,4 +1,4 @@
-// Check authentication
+
 const userId = localStorage.getItem('userId');
 const role = localStorage.getItem('role');
 
@@ -9,13 +9,11 @@ if (!userId || role !== 'admin') {
 let selectedRequest = null;
 let pendingRequests = [];
 
-// DOM Elements
 const requestsList = document.getElementById('requestsList');
 const requestCount = document.getElementById('requestCount');
 const requestDetails = document.getElementById('requestDetails');
 const actionButtons = document.getElementById('actionButtons');
 
-// Initialize the page
 document.addEventListener('DOMContentLoaded', function() {
     loadPendingRequests();
 
@@ -28,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Load pending requests
 async function loadPendingRequests() {
     try {
         requestsList.innerHTML = '<div class="loading-message">Loading pending requests...</div>';
@@ -59,7 +56,6 @@ async function loadPendingRequests() {
     }
 }
 
-// Display list of requests
 function displayRequests() {
     if (pendingRequests.length === 0) {
         requestsList.innerHTML = '<div class="loading-message">No pending requests found</div>';
@@ -85,7 +81,6 @@ function displayRequests() {
     `).join('');
 }
 
-// Handle selection
 function selectRequest(index) {
     document.querySelectorAll('.request-card').forEach(card => card.classList.remove('selected'));
     event.target.closest('.request-card').classList.add('selected');
@@ -95,7 +90,6 @@ function selectRequest(index) {
     actionButtons.style.display = 'flex';
 }
 
-// Show request detail
 function displayRequestDetails(request) {
     if (!request) {
         requestDetails.innerHTML = `
@@ -124,11 +118,8 @@ function displayRequestDetails(request) {
     `;
 }
 
-// Approve request
 async function approveRequest() {
     if (!selectedRequest) return alert('Please select a request first');
-
-    if (!confirm('Are you sure you want to approve this request?')) return;
 
     try {
         const response = await fetch('http://localhost:8080/api/rooms/approve-request', {
@@ -158,11 +149,9 @@ async function approveRequest() {
     }
 }
 
-// Reject request
+
 async function rejectRequest() {
     if (!selectedRequest) return alert('Please select a request first');
-
-    if (!confirm('Are you sure you want to reject this request?')) return;
 
     try {
         const response = await fetch('http://localhost:8080/api/rooms/reject-request', {

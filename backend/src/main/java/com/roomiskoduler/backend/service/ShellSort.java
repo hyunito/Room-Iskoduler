@@ -9,8 +9,7 @@ public class ShellSort {
             for (int i = gap; i < n; i++) {
                 Room temp = rooms[i];
                 int j = i;
-                while (j >= gap && getWorkingPCs(rooms[j - gap]) <
-                        getWorkingPCs(temp)) {
+                while (j >= gap && getWorkingPCs(rooms[j - gap]) < getWorkingPCs(temp)) {
                     rooms[j] = rooms[j - gap];
                     j -= gap;
                 }
