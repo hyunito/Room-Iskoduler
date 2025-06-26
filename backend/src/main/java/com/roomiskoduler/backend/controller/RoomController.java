@@ -5,21 +5,132 @@ import com.roomiskoduler.backend.dao.RequestInboxDAO;
 import com.roomiskoduler.backend.model.*;
 import com.roomiskoduler.backend.data.RoomLinkedList;
 import com.roomiskoduler.backend.service.SequentialSearch;
+import com.roomiskoduler.backend.service.ShellSort;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+
 
 import java.sql.Date;
 import java.sql.Time;
-import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/rooms")
 @CrossOrigin(origins = "*")
 public class RoomController {
+
+    @PostMapping("/reject-request")
+    public ResponseEntity<Map<String, String>> rejectRequest(@RequestBody Map<String, Object> payload) {
+        int requestId = (int) payload.get("requestId");
+        int adminId = (int) payload.get("adminId");
+
+        boolean success = RequestInboxDAO.deleteRequest(requestId);
+
+        if (success) {
+            return ResponseEntity.ok(Map.of("message", "Request rejected."));
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Failed to reject request."));
+        }
+    }
+
+
+    @PostMapping("/approve-request")
+    public ResponseEntity<Map<String, String>> approveRequest(@RequestBody Map<String, Object> payload) {
+        Integer requestId = (Integer) payload.get("requestId");
+        Integer adminId = (Integer) payload.get("adminId");
+
+        if (requestId == null || adminId == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Missing requestId or adminId"));
+        }
+
+        RoomRequest request = RequestInboxDAO.getRequestById(requestId);
+        if (request == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Request not found"));
+        }
+
+        boolean success = RequestInboxDAO.approveAndBook(request);
+
+        if (success) {
+            return ResponseEntity.ok(Map.of("message", "Request approved."));
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "Failed to approve request."));
+        }
+    }
+
+    @GetMapping("/pending-requests")
+    public List<Map<String, Object>> getPendingRequests() {
+        List<RoomRequest> pending = RequestInboxDAO.getAllPending();
+
+        return pending.stream().map(request -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("userId", request.getUserId());
+            map.put("id", request.getRequestId());
+            map.put("roomName", request.getChosenRoom());
+            map.put("date", request.getBookingDate().toString());
+            map.put("time", request.getStartTime().toString());
+            map.put("duration", request.getDurationMinutes());
+            map.put("students", request.getNumberOfStudents());
+            map.put("pcs", request.getRequiredPCs());
+            map.put("roomType", RoomFinderDAO.getRoomType(request.getChosenRoom()));
+
+            map.put("userName", RoomFinderDAO.getUserNameById(request.getUserId()));
+
+            return map;
+        }).collect(Collectors.toList());
+    }
+
+
+    @PostMapping("/available-rooms")
+    public List<?> getAvailableRooms(@RequestBody RoomRequestPayload payload) {
+        RoomRequest request = new RoomRequest();
+
+        // Set request properties from payload
+        request.setRoomType(payload.getRoomType());
+
+        try {
+            String formattedTime = payload.getTime().length() == 5 ? payload.getTime() + ":00" : payload.getTime();
+            request.setBookingDate(Date.valueOf(payload.getDate()));
+            request.setStartTime(Time.valueOf(formattedTime));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid date or time format.");
+        }
+
+        request.setDurationMinutes(payload.getDuration());
+        request.setRequiredPCs(payload.getPcs());
+        request.setNumberOfStudents(payload.getStudents());
+
+        RoomLinkedList allUnoccupiedRooms = RoomFinderDAO.getAllUnoccupiedRooms();
+
+        RoomLinkedList typeFilteredRooms = new RoomLinkedList();
+        for (Room room : allUnoccupiedRooms.toArray()) {
+            if ("laboratory".equalsIgnoreCase(request.getRoomType()) && room instanceof LaboratoryRoom) {
+                typeFilteredRooms.add(room);
+            } else if ("lecture".equalsIgnoreCase(request.getRoomType()) && !(room instanceof LaboratoryRoom)) {
+                typeFilteredRooms.add(room);
+            }
+        }
+
+        RoomLinkedList available = SequentialSearch.filterMatchingRooms(typeFilteredRooms, request);
+
+        if ("laboratory".equalsIgnoreCase(request.getRoomType())) {
+            Room[] roomArray = available.toArray();
+            ShellSort.sort(roomArray);
+            return Arrays.asList(roomArray);
+        }
+
+        return available.toRoomNames();
+    }
+
+
 
     @GetMapping("/bookings/faculty/{userId}")
     public List<BookingDTO> getFacultyInbox(@PathVariable int userId) {
@@ -33,14 +144,14 @@ public class RoomController {
             String timeOut = req.calculateEndTime().toString();
             String status = req.getStatus();
 
-            dtos.add(new BookingDTO(room, date, timeIn, timeOut, status));
+            String roomType = RoomFinderDAO.getRoomType(room);
+
+            dtos.add(new BookingDTO(room, roomType, date, timeIn, timeOut, status));
         }
+
 
         return dtos;
     }
-
-
-
 
 
     @GetMapping
@@ -67,7 +178,6 @@ public class RoomController {
 
         if (specialNames.containsKey(roomName)) {
             type = specialNames.get(roomName);
-            // Leave statusText blank for special rooms
         } else if (rawType != null && !rawType.isEmpty()) {
             type = rawType.substring(0, 1).toUpperCase() + rawType.substring(1).toLowerCase() + " Room";
             statusText = occupied ? "Currently Occupied" : "Available";
@@ -84,33 +194,6 @@ public class RoomController {
         return response;
     }
 
-
-
-    @PostMapping("/available-rooms")
-    public List<String> getAvailableLectureRooms(@RequestBody RoomRequestPayload payload) {
-        System.out.println("Received payload:");
-        System.out.println("Date: " + payload.getDate());
-        System.out.println("Time: " + payload.getTime());
-        System.out.println("Duration: " + payload.getDuration());
-
-        RoomRequest request = new RoomRequest();
-        request.setRoomType("lecture");
-
-        try {
-            request.setBookingDate(Date.valueOf(payload.getDate()));
-            String formattedTime = payload.getTime().length() == 5 ? payload.getTime() + ":00" : payload.getTime();
-            request.setStartTime(Time.valueOf(formattedTime));
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid date or time format. Expected formats: yyyy-MM-dd for date, HH:mm:ss or HH:mm for time.");
-        }
-
-        request.setDurationMinutes(payload.getDuration());
-
-        RoomLinkedList allRooms = RoomFinderDAO.getAllUnoccupiedRooms();
-        RoomLinkedList matches = SequentialSearch.filterMatchingRooms(allRooms, request);
-
-        return matches.toRoomNames();
-    }
 
     @PostMapping("/book-room")
     public Map<String, String> bookRoom(@RequestBody RoomBookingPayload payload) {

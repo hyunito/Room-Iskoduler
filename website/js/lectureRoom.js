@@ -32,10 +32,7 @@ window.addEventListener('DOMContentLoaded', function () {
   const timeInput = document.getElementById('time');
   const durationInput = document.getElementById('duration');
 
-  const resultsContainer = document.createElement('div');
-  resultsContainer.id = 'available-rooms-results';
-  resultsContainer.style.marginTop = '30px';
-  document.querySelector('.form-container').appendChild(resultsContainer);
+  const resultsContainer = document.getElementById('available-rooms-results');
 
   proceedBtn.addEventListener('click', async function (e) {
     e.preventDefault();
@@ -55,7 +52,8 @@ window.addEventListener('DOMContentLoaded', function () {
       time,
       duration: Number(duration),
       role,
-      userId: parseInt(userId)
+      userId: parseInt(userId),
+      roomType: "lecture"
     };
 
     try {
@@ -74,54 +72,59 @@ window.addEventListener('DOMContentLoaded', function () {
       if (Array.isArray(rooms) && rooms.length > 0) {
         const list = document.createElement('ul');
         rooms.forEach(room => {
-          const li = document.createElement('li');
-          li.textContent = room;
-          li.style.cursor = 'pointer';
-          li.style.padding = '8px 0';
-          li.style.transition = 'background 0.2s';
+  const li = document.createElement('li');
+  const isObject = typeof room === 'object' && room !== null;
 
-          li.addEventListener('mouseenter', () => li.style.background = '#e8ddd4');
-          li.addEventListener('mouseleave', () => li.style.background = '');
+  if (isObject && room.roomName && room.workingPCs !== undefined) {
+    li.textContent = `${room.roomName} has ${room.workingPCs} working PCs`;
+  } else {
+    li.textContent = room; // fallback if it's just a string like "N502"
+  }
 
-          li.addEventListener('click', async () => {
-            resultsContainer.innerHTML = 'Booking room...';
+  li.style.cursor = 'pointer';
+  li.style.padding = '8px 0';
+  li.style.transition = 'background 0.2s';
 
-            try {
-              const bookRes = await fetch('http://localhost:8080/api/rooms/book-room', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                  room,
-                  date,
-                  time,
-                  duration: Number(duration),
-                  role,
-                  userId: parseInt(userId)
-                })
-              });
+  li.addEventListener('mouseenter', () => li.style.background = '#e8ddd4');
+  li.addEventListener('mouseleave', () => li.style.background = '');
 
-              const bookReply = await bookRes.json();
+  li.addEventListener('click', async () => {
+    resultsContainer.innerHTML = 'Booking room...';
+    try {
+      const bookRes = await fetch('http://localhost:8080/api/rooms/book-room', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          room: isObject ? room.roomName : room,
+          date,
+          time,
+          duration: Number(duration),
+          role,
+          userId: parseInt(userId)
+        })
+      });
 
-              if (!bookRes.ok || bookReply.error) { throw new Error(bookReply.error || 'Booking failed.');
+      const bookReply = await bookRes.json();
 
-              }
-        if (bookReply.message?.toLowerCase().includes("sent to admin")) {
-           resultsContainer.innerHTML = `<span style='color:green;'>${bookReply.message}</span>`;
-          } else if (bookReply.message?.toLowerCase().includes("booked")) {
-            resultsContainer.innerHTML = `<span style='color:green;'>${bookReply.message}</span>`;
-          } else {
-                resultsContainer.innerHTML = `<span style='color:orange;'>${bookReply.message || "Unknown booking result."}</span>`;
-                }
+      if (!bookRes.ok || bookReply.error) {
+        throw new Error(bookReply.error || 'Booking failed.');
+      }
 
-            } catch (err) {
-              resultsContainer.innerHTML = `<span style='color:red;'>Error: ${err.message}</span>`;
-            }
-          });
+      if (bookReply.message?.toLowerCase().includes("sent to admin")) {
+        resultsContainer.innerHTML = `<span style='color:green;'>${bookReply.message}</span>`;
+      } else if (bookReply.message?.toLowerCase().includes("booked")) {
+        resultsContainer.innerHTML = `<span style='color:green;'>${bookReply.message}</span>`;
+      } else {
+        resultsContainer.innerHTML = `<span style='color:orange;'>${bookReply.message || "Unknown booking result."}</span>`;
+      }
 
-          list.appendChild(li);
-        });
+    } catch (err) {
+      resultsContainer.innerHTML = `<span style='color:red;'>Error: ${err.message}</span>`;
+    }
+  });
+
+  list.appendChild(li);
+});
 
         resultsContainer.innerHTML = '<h3>Available Rooms (click to book):</h3>';
         resultsContainer.appendChild(list);

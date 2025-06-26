@@ -77,7 +77,8 @@ function displayBookings(bookings) {
                 <div class="booking-header">
                     <div class="room-info">
                         <h3>${booking.roomName}</h3>
-                        <span class="room-type">Lecture Room</span>
+                        <span class="room-type">${booking.roomType === 'laboratory' ? 'Laboratory Room' : 'Lecture Room'}</span>
+
                     </div>
                     <div class="status-badge ${statusClass}">${statusText}</div>
                 </div>

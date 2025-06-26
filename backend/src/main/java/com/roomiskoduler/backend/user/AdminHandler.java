@@ -68,7 +68,7 @@ public class AdminHandler {
             RequestInboxDAO.approveAndBook(selected);
             System.out.println("✅ Request approved and booked.");
         } else if (decision.equals("D")) {
-            RequestInboxDAO.deleteRequest(selected);
+            RequestInboxDAO.deleteRequest(selected.getRequestId());
             System.out.println("Request denied and removed.");
         } else {
             System.out.println("Invalid option.");

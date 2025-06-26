@@ -47,7 +47,7 @@ CREATE TABLE inbox_requests (
   booking_date DATE,
   start_time TIME,
   end_time TIME,
-  status ENUM('pending', 'cancelled', inbox_requests'approved') DEFAULT 'pending'
+  status ENUM('pending', 'cancelled', 'approved') DEFAULT 'pending'
 );
 
 

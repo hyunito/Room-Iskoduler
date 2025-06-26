@@ -12,6 +12,16 @@ public class RoomRequest {
     private int durationMinutes;
     private String chosenRoom;
     private int numberOfStudents;
+    private int requestId;
+
+    public int getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(int requestId) {
+        this.requestId = requestId;
+    }
+
 
     public int getUserId() { return userId; }
     public void setUserId(int userId) { this.userId = userId; }

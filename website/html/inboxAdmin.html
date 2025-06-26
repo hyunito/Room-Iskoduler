@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/inboxadmintest.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet" />
+    <title>Admin Inbox - Pending Requests</title>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="logo-container">
+                <img class="logo" src="../assets/logo2.png" alt="ISKO-DEETS Logo"/>
+                <div class="logo-subtitle">Room Booking Management</div>
+            </div>
+            
+            <div class="title-section">
+                <h1>PENDING REQUESTS</h1>
+                <p>Review and manage room booking requests</p>
+            </div>
+            
+            <a href="adminPage.html" class="back-btn" id="backBtn">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+                <span>Back</span>
+            </a>
+        </header>
+
+        <!-- Main Content Section -->
+        <main class="main-content">
+            <div class="content-area">
+                <!-- Request Cards Section -->
+                <div class="requests-section">
+                    <div class="section-header">
+                        <h2>Pending Requests</h2>
+                        <div class="request-count" id="requestCount">0 requests</div>
+                    </div>
+                    
+                    <div class="requests-list" id="requestsList">
+                        <!-- Requests will be dynamically loaded here -->
+                        <div class="loading-message">Loading pending requests...</div>
+                    </div>
+                </div>
+                
+                <!-- Request Details Section -->
+                <div class="request-details-section">
+                    <div class="details-header">
+                        <h2>Request Details</h2>
+                    </div>
+                    
+                    <div class="request-details" id="requestDetails">
+                        <div class="no-selection">
+                            <svg viewBox="0 0 24 24" width="48" height="48">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                            <p>Select a request to view details</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="action-buttons" id="actionButtons" style="display: none;">
+                        <button class="action-btn accept-btn" onclick="approveRequest()">
+                            <svg viewBox="0 0 24 24" width="20" height="20">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                            </svg>
+                            Approve Request
+                        </button>
+                        <button class="action-btn deny-btn" onclick="rejectRequest()">
+                            <svg viewBox="0 0 24 24" width="20" height="20">
+                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                            </svg>
+                            Reject Request
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/inboxAdmin.js"></script>
+</body>
+</html>

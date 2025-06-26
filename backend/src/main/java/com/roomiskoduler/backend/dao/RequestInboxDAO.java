@@ -77,6 +77,7 @@ public class RequestInboxDAO {
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 RoomRequest request = new RoomRequest();
+                request.setRequestId(rs.getInt("request_id"));
                 request.setUserId(rs.getInt("user_id"));
                 request.setChosenRoom(rs.getString("room_name"));
                 request.setBookingDate(rs.getDate("booking_date"));
@@ -139,7 +140,7 @@ public class RequestInboxDAO {
         return false;
     }
 
-    public static void approveAndBook(RoomRequest request) {
+    public static boolean approveAndBook(RoomRequest request) {
         try (Connection conn = DBConnection.getConnection()) {
             conn.setAutoCommit(false);
 
@@ -152,38 +153,41 @@ public class RequestInboxDAO {
             bookStmt.setTime(5, request.calculateEndTime());
             bookStmt.executeUpdate();
 
-            PreparedStatement updateStatus = conn.prepareStatement("UPDATE inbox_requests SET status = 'approved' WHERE user_id = ? AND room_name = ? AND booking_date = ?");
-                    updateStatus.setInt(1, request.getUserId());
+            PreparedStatement updateStatus = conn.prepareStatement(
+                    "UPDATE inbox_requests SET status = 'approved' WHERE user_id = ? AND room_name = ? AND booking_date = ?");
+            updateStatus.setInt(1, request.getUserId());
             updateStatus.setString(2, request.getChosenRoom());
             updateStatus.setDate(3, request.getBookingDate());
             updateStatus.executeUpdate();
 
             conn.commit();
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 
-    public static void deleteRequest(RoomRequest request) {
-        try (Connection conn = DBConnection.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("DELETE FROM inbox_requests WHERE user_id = ? AND room_name = ? AND booking_date = ? AND start_time = ?");
-            stmt.setInt(1, request.getUserId());
-            stmt.setString(2, request.getChosenRoom());
-            stmt.setDate(3, request.getBookingDate());
-            stmt.setTime(4, request.getStartTime());
-            stmt.executeUpdate();
+
+    public static boolean deleteRequest(int requestId) {
+        String sql = "DELETE FROM inbox_requests WHERE request_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, requestId);
+            int rows = stmt.executeUpdate();
+            return rows > 0;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
+
 
     public static boolean terminateSpecificBooking(String roomName, Date bookingDate, Time startTime) {
         try (Connection conn = DBConnection.getConnection()) {
             conn.setAutoCommit(false);
 
-            PreparedStatement deleteBooking = conn.prepareStatement(
-                    "DELETE FROM bookings WHERE room_name = ? AND booking_date = ? AND start_time = ?"
-            );
+            PreparedStatement deleteBooking = conn.prepareStatement("DELETE FROM bookings WHERE room_name = ? AND booking_date = ? AND start_time = ?");
             deleteBooking.setString(1, roomName);
             deleteBooking.setDate(2, bookingDate);
             deleteBooking.setTime(3, startTime);
@@ -218,6 +222,29 @@ public class RequestInboxDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static RoomRequest getRequestById(int requestId) {
+        String sql = "SELECT * FROM inbox_requests WHERE request_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, requestId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                RoomRequest req = new RoomRequest();
+                req.setUserId(rs.getInt("user_id"));
+                req.setChosenRoom(rs.getString("room_name"));
+                req.setBookingDate(rs.getDate("booking_date"));
+                req.setStartTime(rs.getTime("start_time"));
+
+                return req;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

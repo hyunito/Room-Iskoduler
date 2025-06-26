@@ -158,6 +158,25 @@ public class RoomFinderDAO {
             e.printStackTrace();
             return false;
         }
+
+
+    }
+
+    public static String getUserNameById(int userId) {
+        String sql = "SELECT username FROM users WHERE user_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("username");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "Unknown User";
     }
 
 
