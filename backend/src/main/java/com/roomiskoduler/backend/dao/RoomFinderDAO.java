@@ -10,17 +10,50 @@ import java.sql.*;
 
 public class RoomFinderDAO {
 
+    public static RoomLinkedList getAllRooms() {
+        RoomLinkedList allRooms = new RoomLinkedList();
+
+        try (Connection conn = DBConnection.getConnection()) {
+            String sql = "SELECT room_name, room_type, COALESCE(working_pcs,0) as working_pcs, COALESCE(num_chairs,0) as num_chairs, is_occupied FROM rooms";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String roomName = rs.getString("room_name");
+                String roomType = rs.getString("room_type");
+                int pcs = rs.getInt("working_pcs");
+                int chairs = rs.getInt("num_chairs");
+                boolean occupied = rs.getBoolean("is_occupied");
+
+                Room room;
+                if ("laboratory".equalsIgnoreCase(roomType)) {
+                    room = new LaboratoryRoom(roomName, pcs, chairs);
+                    room.setOccupied(occupied);  // if you have a setter
+                } else {
+                    room = new Room(roomName);
+                    room.setOccupied(occupied);
+                }
+
+                allRooms.add(room);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return allRooms;
+    }
+
     public static RoomLinkedList findAvailableRooms(RoomRequest request) {
         RoomLinkedList availableRooms = new RoomLinkedList();
 
         try (Connection conn = DBConnection.getConnection()) {
 
-            String sql = "SELECT room_name, COALESCE(working_pcs, 0) AS working_pcs FROM rooms WHERE room_type = ? AND (working_pcs >= ? OR ? IS NULL) AND (num_chairs >= ? OR ? IS NULL) AND is_occupied = 0 AND room_name NOT IN (SELECT room_name FROM bookings WHERE booking_date = ? AND ((? < end_time AND ? >= start_time)))";
+            String sql = "SELECT room_name, COALESCE(working_pcs, 0) AS working_pcs, COALESCE(num_chairs, 0) AS num_chairs FROM rooms WHERE room_type = ? AND (working_pcs >= ? OR ? IS NULL) AND (num_chairs >= ? OR ? IS NULL) AND is_occupied = 0 AND room_name NOT IN (SELECT room_name FROM bookings WHERE booking_date = ? AND ((? < end_time AND ? >= start_time)))";
 
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, request.getRoomType());
 
-            if (request.getRoomType().equals("laboratory")) {
+            if (request.getRoomType().equalsIgnoreCase("laboratory")) {
                 stmt.setInt(2, request.getRequiredPCs());
                 stmt.setInt(3, request.getRequiredPCs());
                 stmt.setInt(4, request.getNumberOfStudents());
@@ -40,9 +73,11 @@ public class RoomFinderDAO {
             while (rs.next()) {
                 String roomName = rs.getString("room_name");
                 int pcs = rs.getInt("working_pcs");
+                int capacity = rs.getInt("num_chairs"); // Get capacity
 
-                if (request.getRoomType().equals("laboratory")) {
-                    LaboratoryRoom lab = new LaboratoryRoom(roomName, pcs);
+                if (request.getRoomType().equalsIgnoreCase("laboratory")) {
+
+                    LaboratoryRoom lab = new LaboratoryRoom(roomName, pcs, capacity);
                     availableRooms.add(lab);
                 } else {
                     Room room = new Room(roomName);
@@ -61,7 +96,11 @@ public class RoomFinderDAO {
         RoomLinkedList availableRooms = new RoomLinkedList();
 
         try (Connection conn = DBConnection.getConnection()) {
-            String sql = "SELECT room_name, COALESCE(working_pcs, 0) AS working_pcs, room_type FROM rooms WHERE is_occupied = 0";
+
+            String sql = "SELECT room_name, COALESCE(working_pcs, 0) AS working_pcs, COALESCE(num_chairs, 0) AS num_chairs, room_type " +
+                    "FROM rooms " +
+                    "WHERE is_occupied = 0";
+
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
@@ -69,9 +108,11 @@ public class RoomFinderDAO {
                 String name = rs.getString("room_name");
                 String type = rs.getString("room_type");
                 int pcs = rs.getInt("working_pcs");
+                int capacity = rs.getInt("num_chairs");
 
                 if ("laboratory".equalsIgnoreCase(type)) {
-                    availableRooms.add(new LaboratoryRoom(name, pcs));
+
+                    availableRooms.add(new LaboratoryRoom(name, pcs, capacity));
                 } else {
                     availableRooms.add(new Room(name));
                 }
@@ -82,9 +123,11 @@ public class RoomFinderDAO {
 
         return availableRooms;
     }
+
     public static Room findRoomByName(String roomName) {
         try (Connection conn = DBConnection.getConnection()) {
-            String sql = "SELECT room_name, room_type, is_occupied, working_pcs FROM rooms WHERE room_name = ?";
+            // 1️⃣ Include num_chairs in your select
+            String sql = "SELECT room_name, room_type, is_occupied, working_pcs, num_chairs FROM rooms WHERE room_name = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, roomName);
             ResultSet rs = stmt.executeQuery();
@@ -94,7 +137,9 @@ public class RoomFinderDAO {
                 boolean occupied = rs.getBoolean("is_occupied");
 
                 if ("laboratory".equalsIgnoreCase(type)) {
-                    LaboratoryRoom lab = new LaboratoryRoom(roomName, rs.getInt("working_pcs"));
+                    int workingPCs = rs.getInt("working_pcs");
+                    int capacity = rs.getInt("num_chairs"); // Get capacity
+                    LaboratoryRoom lab = new LaboratoryRoom(roomName, workingPCs, capacity);
                     lab.setOccupied(occupied);
                     return lab;
                 } else {
@@ -108,6 +153,7 @@ public class RoomFinderDAO {
         }
         return null;
     }
+
     public static boolean isRoomCurrentlyOccupied(String roomName) {
         String sql = "SELECT COUNT(*) FROM bookings WHERE room_name = ? AND booking_date = CURRENT_DATE() AND start_time <= CURRENT_TIME() AND end_time > CURRENT_TIME()";
         try (Connection conn = DBConnection.getConnection();

@@ -30,14 +30,14 @@ public class SequentialSearch {
 
             if (request.getRoomType().equalsIgnoreCase("laboratory")) {
                 if (room instanceof LaboratoryRoom labRoom) {
-                    boolean pcsOkay = labRoom.getWorkingPCs() >= request.getRequiredPCs();
-                    boolean chairsOkay = labRoom.getWorkingPCs() >= request.getNumberOfStudents();
-                    if (pcsOkay && chairsOkay) {
+
+                    boolean chairsOkay = labRoom.getCapacity() >= request.getNumberOfStudents();
+                    if (chairsOkay) {
                         matched.add(labRoom);
                     }
                 }
             } else if (request.getRoomType().equalsIgnoreCase("lecture")) {
-                if (!(room instanceof LaboratoryRoom)) { // exclude labs
+                if (!(room instanceof LaboratoryRoom)) {
                     matched.add(room);
                 }
             }

@@ -2,21 +2,26 @@ package com.roomiskoduler.backend.service;
 
 import com.roomiskoduler.backend.data.RoomLinkedList;
 import com.roomiskoduler.backend.data.RoomNode;
+import com.roomiskoduler.backend.dao.RoomFinderDAO;
 import com.roomiskoduler.backend.model.Room;
+import org.springframework.stereotype.Service;
 
+import jakarta.annotation.PostConstruct;  // <- import this
 import java.util.HashMap;
 
+@Service
 public class RoomHashMap {
 
-    private HashMap<String, Room> map;
-
-    public RoomHashMap(RoomLinkedList list) {
-        map = new HashMap<>();
+    private final HashMap<String, Room> map = new HashMap<>();
+    @PostConstruct
+    public void init() {
+        RoomLinkedList list = RoomFinderDAO.getAllRooms();
         RoomNode current = list.getHead();
         while (current != null) {
             map.put(current.data.getRoomName(), current.data);
             current = current.next;
         }
+        System.out.println("✅ RoomHashMap loaded with " + map.size() + " rooms.");
     }
 
     public Room getRoomByName(String name) {
@@ -28,8 +33,6 @@ public class RoomHashMap {
     }
 
     public void displayAllRoomKeys() {
-        for (String key : map.keySet()) {
-            System.out.println("- " + key);
-        }
+        map.keySet().forEach(key -> System.out.println("- " + key));
     }
 }

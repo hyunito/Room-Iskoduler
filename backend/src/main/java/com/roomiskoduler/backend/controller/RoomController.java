@@ -4,9 +4,11 @@ import com.roomiskoduler.backend.dao.RoomFinderDAO;
 import com.roomiskoduler.backend.dao.RequestInboxDAO;
 import com.roomiskoduler.backend.model.*;
 import com.roomiskoduler.backend.data.RoomLinkedList;
+import com.roomiskoduler.backend.service.RoomHashMap;
 import com.roomiskoduler.backend.service.SequentialSearch;
 import com.roomiskoduler.backend.service.ShellSort;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,8 +35,17 @@ public class RoomController {
         return ResponseEntity.ok(bookings);
     }
 
+    @Autowired
+    private RoomHashMap roomHashMap;
+
     @PostMapping("/book-rooms")
     public ResponseEntity<?> bookRoom(@RequestBody RoomRequest roomBooked) {
+
+        if (!roomHashMap.contains(roomBooked.getChosenRoom())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Unknown room: " + roomBooked.getChosenRoom()));
+        }
+
         boolean overlap = RequestInboxDAO.isOverlappingBooking(roomBooked);
         if (overlap) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
@@ -43,13 +54,16 @@ public class RoomController {
 
         boolean success = RequestInboxDAO.bookRoomDirectly(roomBooked);
         if (success) {
-            return ResponseEntity.ok(Map.of("message", "Room successfully booked", "room", roomBooked.getChosenRoom()
+            return ResponseEntity.ok(Map.of(
+                    "message", "Room successfully booked",
+                    "room", roomBooked.getChosenRoom()
             ));
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Failed to save booking."));
         }
     }
+
 
 
     @PostMapping("/reject-request")

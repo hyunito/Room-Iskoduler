@@ -11,6 +11,8 @@ import java.util.Map;
 
 public class RequestInboxDAO {
 
+
+
     public static void addToInbox(RoomRequest request) {
         System.out.println("Inserting request into inbox for user ID: " + request.getUserId());
 
