@@ -133,26 +133,33 @@ public class RoomFinderDAO {
         }
         return "Unknown";
     }
-    public static boolean bookRoomDirectly(String room, String date, String time, int duration) {
-        String sql = "INSERT INTO bookings (room_name, booking_date, start_time, end_time) VALUES (?, ?, ?, ?)";
+    public static boolean bookRoomDirectly(int userId, String room, String date, String time, int duration) {
+        String sql = "INSERT INTO bookings (user_id, room_name, booking_date, start_time, end_time) VALUES (?, ?, ?, ?, ?)";
+
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, room);
-            stmt.setDate(2, Date.valueOf(date));
-            stmt.setTime(3, Time.valueOf(time));
+            // Normalize time string to HH:mm:ss format
+            String normalizedTime = time.length() == 5 ? time + ":00" : time;
 
-            LocalTime start = LocalTime.parse(time);
+            LocalTime start = LocalTime.parse(normalizedTime);
             LocalTime end = start.plusMinutes(duration);
-            stmt.setTime(4, Time.valueOf(end));
+
+            stmt.setInt(1, userId);
+            stmt.setString(2, room);
+            stmt.setDate(3, Date.valueOf(date));
+            stmt.setTime(4, Time.valueOf(start));
+            stmt.setTime(5, Time.valueOf(end));
 
             stmt.executeUpdate();
             return true;
+
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
+
 
 
 

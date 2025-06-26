@@ -10,9 +10,12 @@ import java.util.List;
 public class RequestInboxDAO {
 
     public static void addToInbox(RoomRequest request) {
-        String sql = "INSERT INTO inbox_requests (user_id, room_name,booking_date, start_time, end_time, status) VALUES (?, ?, ?, ?, ?, 'pending')";
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement
-                stmt = conn.prepareStatement(sql)) {
+        System.out.println("Inserting request into inbox for user ID: " + request.getUserId());
+
+        String sql = "INSERT INTO inbox_requests (user_id, room_name, booking_date, start_time, end_time, status) VALUES (?, ?, ?, ?, ?, 'pending')";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setInt(1, request.getUserId());
             stmt.setString(2, request.getChosenRoom());
             stmt.setDate(3, request.getBookingDate());
@@ -22,7 +25,11 @@ public class RequestInboxDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        List<RoomRequest> test = getUserInbox(request.getUserId());
+        System.out.println("User now has " + test.size() + " inbox requests");
+
     }
+
     public static List<RoomRequest> getUserInbox(int userId) {
         List<RoomRequest> list = new ArrayList<>();
         String sql = "SELECT * FROM inbox_requests WHERE user_id = ? ORDER BY booking_date, start_time";

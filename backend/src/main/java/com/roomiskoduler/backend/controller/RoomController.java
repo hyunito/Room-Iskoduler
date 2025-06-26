@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,28 @@ import java.util.Map;
 @RequestMapping("/api/rooms")
 @CrossOrigin(origins = "*")
 public class RoomController {
+
+    @GetMapping("/bookings/faculty/{userId}")
+    public List<BookingDTO> getFacultyInbox(@PathVariable int userId) {
+        List<RoomRequest> requests = RequestInboxDAO.getUserInbox(userId);
+        List<BookingDTO> dtos = new ArrayList<>();
+
+        for (RoomRequest req : requests) {
+            String room = req.getChosenRoom();
+            String date = req.getBookingDate().toString();
+            String timeIn = req.getStartTime().toString();
+            String timeOut = req.calculateEndTime().toString();
+            String status = req.getStatus();
+
+            dtos.add(new BookingDTO(room, date, timeIn, timeOut, status));
+        }
+
+        return dtos;
+    }
+
+
+
+
 
     @GetMapping
     public List<Room> getAllRooms() {
@@ -97,36 +120,32 @@ public class RoomController {
             boolean success = false;
 
             if ("admin".equalsIgnoreCase(payload.getRole())) {
-                success = RoomFinderDAO.bookRoomDirectly(payload.getRoom(), payload.getDate(), payload.getTime(), payload.getDuration());
+                success = RoomFinderDAO.bookRoomDirectly(payload.getUserId(), payload.getRoom(), payload.getDate(), payload.getTime(), payload.getDuration());
                 if (success) {
                     response.put("message", "Room booked successfully.");
                 } else {
-                    response.put("error", "Booking failed (maybe due to conflict).");
+                    response.put("error", "Booking failed.");
                 }
 
             } else if ("faculty".equalsIgnoreCase(payload.getRole())) {
-
-                // Build RoomRequest object
                 RoomRequest request = new RoomRequest();
+                request.setUserId(payload.getUserId());
                 request.setChosenRoom(payload.getRoom());
                 request.setBookingDate(Date.valueOf(payload.getDate()));
-
-                String formattedTime = payload.getTime().length() == 5
-                        ? payload.getTime() + ":00"
-                        : payload.getTime();
-
+                String formattedTime = payload.getTime().length() == 5 ? payload.getTime() + ":00" : payload.getTime();
                 request.setStartTime(Time.valueOf(formattedTime));
                 request.setDurationMinutes(payload.getDuration());
 
-                request.setUserId(0);
-
-                RequestInboxDAO.addToInbox(request);
-                response.put("message", "Booking request sent to admin for approval.");
-                success = true;
-
-            } else {
-                response.put("error", "Invalid user role.");
+                if (RequestInboxDAO.isOverlappingBooking(request)) {
+                    response.put("error", "Time conflict with existing booking.");
+                } else {
+                    RequestInboxDAO.addToInbox(request);
+                    response.put("message", "Booking request sent to admin for approval.");
+                    success = true;
+                }
             }
+
+
 
         } catch (Exception e) {
             e.printStackTrace();

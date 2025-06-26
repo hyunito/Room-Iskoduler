@@ -1,3 +1,4 @@
+/* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -6,9 +7,12 @@
 }
 
 body {
-    /* overflow: hidden; */
     color: #650000;
     background-color: #650000;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Prevent body scrollbars */
 }
 
 .hidden {
@@ -20,13 +24,15 @@ a {
     text-decoration: none;
 }
 
+/* Main Container */
 .container {
     width: 100%;
-    height: 100vh; 
-    top: 0;
+    height: 100vh;
     position: relative;
+    overflow: hidden; /* Prevent container scrollbars */
 }
 
+/* Header */
 .header {
     background-color: #e8ddd4;
     border-radius: 0px 0px 0px 50px;
@@ -48,6 +54,11 @@ a {
     height: 80px;
 }
 
+.logo {
+    width: 100%;
+    object-fit: cover;
+}
+
 .login {
     position: absolute;
     right: 10px;
@@ -56,17 +67,13 @@ a {
     color: #650000;
 }
 
-.logo {
-    width: 100%;
-    object-fit: cover;
-}
-
+/* Map Area */
 .map-container {
     position: relative;
-    overflow: auto;
     width: 100%;
     height: 100vh;
     z-index: 1;
+    overflow: hidden; /* Remove scroll bars from map container */
 }
 
 .map {
@@ -80,7 +87,7 @@ a {
     cursor: grabbing;
 }
 
-/* Make room areas fully clickable */
+/* Room Highlighting */
 .lecture, .lab, .faculty {
     fill: transparent;
     pointer-events: all;
@@ -101,28 +108,28 @@ a {
     fill: #e8ddd4;
 }
 
-.room-name, .text-room{
+/* Room Info in Side Panel */
+.room-name, .text-room {
     display: inline;
 }
 
-/* Side Panel Styles - Restored to original working state */
 .side-panel {
     background-color: #e8ddd4;
     padding: 2em;
     top: 130px;
-    left: -400px; /* Start off-screen */
+    left: -400px;
     width: 350px;
     height: 80%;
     border-radius: 20px;
     z-index: 11;
     box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
-    display: none; /* Initially hidden */
+    display: none;
     position: fixed;
 }
 
 .side-panel.active {
-    transform: translateX(410px); /* Slide into view */
+    transform: translateX(410px);
 }
 
 .side-panel h1 {
@@ -188,7 +195,7 @@ a {
     display: none;
 }
 
-/* Responsive Design */
+/* Responsive */
 @media screen and (max-width: 768px) {
     .header {
         font-size: 80%;
@@ -204,8 +211,6 @@ a {
     }
 
     .login {
-        position: absolute;
-        right: 10px;
         font-size: 0.5rem;
         background-color: #d3c2b5;
         padding: 10px;
@@ -218,32 +223,84 @@ a {
     }
 }
 
-/* Circular icon button at middle-bottom */
-.admin-circular-btn {
-  position: fixed;
-  left: 50%;
-  bottom: 40px;
-  transform: translateX(-50%);
-  width: 70px;
-  height: 70px;
-  background: rgba(232, 221, 212, 0.8);
-  border-radius: 50%;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  cursor: pointer;
-  z-index: 100;
-  transition: background 0.2s, box-shadow 0.2s;
-  backdrop-filter: blur(10px);
+/* Fixed Circular Button Group (Admin/Inbox) - Centered at bottom */
+.circular-btn-group {
+    position: fixed !important;
+    left: 50% !important;
+    bottom: 40px !important;
+    transform: translateX(-50%) !important;
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 32px !important;
+    z-index: 9999 !important;
+    pointer-events: auto !important;
+    width: auto !important;
+    height: auto !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
-.admin-circular-btn:hover {
-  background: rgba(212, 197, 184, 0.9);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+
+.admin-circular-btn,
+.inbox-circular-btn {
+    position: relative !important;
+    width: 70px !important;
+    height: 70px !important;
+    background: rgba(232, 221, 212, 0.9) !important;
+    border-radius: 50% !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    backdrop-filter: blur(10px) !important;
+    text-decoration: none !important;
+    flex-shrink: 0 !important;
+    pointer-events: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
-.admin-circular-btn svg {
-  width: 36px;
-  height: 36px;
-  fill: #650000;
+
+.admin-circular-btn:hover,
+.inbox-circular-btn:hover {
+    background: rgba(212, 197, 184, 0.95);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+.admin-circular-btn svg,
+.inbox-circular-btn svg {
+    width: 36px;
+    height: 36px;
+    fill: #650000;
+}
+
+/* Alternative bottom button (if you still need this) */
+.bottom-center-btn {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+
+    background-color: #e8ddd4;
+    color: #650000;
+    font-weight: 600;
+    border: none;
+    border-radius: 50px;
+    padding: 15px 30px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+
+    /* Keeps it above other content and scrollable map */
+    pointer-events: auto;
+}
+
+.bottom-center-btn:hover {
+    background-color: #d3c2b5;
+    transform: translateX(-50%) scale(1.05);
 }

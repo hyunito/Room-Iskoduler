@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Faculty Inbox - Isko-duler</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/facultyInbox.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+</head>
+<body>
+    <script>
+        console.log("userId:", localStorage.getItem('userId'));
+        console.log("role:", localStorage.getItem('role'));
+    </script>
+
+    <div class="container">
+        <header class="header">
+            <div class="logo-section">
+                <img class="logo" src="../assets/logo2.png"/>
+            </div>
+            <a class="back-btn" href="facultyPage.html">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+                <span>Back to Map</span>
+            </a>
+        </header>
+
+        <div class="inbox-container">
+            <div class="inbox-header">
+                <h1>My Booking Requests</h1>
+                <div class="filter-tabs">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="pending">Pending</button>
+                    <button class="filter-btn" data-filter="accepted">Accepted</button>
+                    <button class="filter-btn" data-filter="cancelled">Cancelled</button>
+                </div>
+            </div>
+
+            <div class="bookings-list" id="bookingsList">
+                <!-- Bookings will be loaded here dynamically -->
+                <div class="loading">Loading your bookings...</div>
+            </div>
+
+            <div class="no-bookings" id="noBookings" style="display: none;">
+                <div class="empty-state">
+                    <svg viewBox="0 0 24 24" width="64" height="64">
+                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                    </svg>
+                    <h3>No bookings found</h3>
+                    <p>You haven't made any room booking requests yet.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/facultyInbox.js"></script>
+</body>
+</html> 

@@ -1,96 +1,136 @@
-// Wait for DOM to load
-window.addEventListener('DOMContentLoaded', function() {
-    const proceedBtn = document.querySelector('.proceed-btn');
-    const dateInput = document.getElementById('date');
-    const timeInput = document.getElementById('time');
-    const durationInput = document.getElementById('duration');
+const userId = localStorage.getItem('userId');
+const role = localStorage.getItem('role');
 
-    // Create a container for results
-    let resultsContainer = document.createElement('div');
-    resultsContainer.id = 'available-rooms-results';
-    resultsContainer.style.marginTop = '30px';
-    document.querySelector('.form-container').appendChild(resultsContainer);
+if (!userId || !role) {
+  window.location.href = 'login.html';
+}
 
-    proceedBtn.addEventListener('click', async function(e) {
-        e.preventDefault();
-        resultsContainer.innerHTML = '';
+window.addEventListener('DOMContentLoaded', function () {
+  // Back button functionality
+  const backBtn = document.getElementById('backBtn');
+  
+  if (backBtn) {
+    backBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      const role = localStorage.getItem('role');
+      
+      if (role === 'admin') {
+        window.location.href = 'adminPage.html';
+      } else if (role === 'faculty') {
+        window.location.href = 'facultyPage.html';
+      } else {
+        // Default fallback - redirect to login if no role found
+        window.location.href = 'login.html';
+      }
+    });
+  }
 
-        const date = dateInput.value;
-        const time = timeInput.value;
-        const duration = durationInput.value;
+  // Proceed button functionality
+  const proceedBtn = document.querySelector('.proceed-btn');
+  const dateInput = document.getElementById('date');
+  const timeInput = document.getElementById('time');
+  const durationInput = document.getElementById('duration');
 
-        if (!date || !time || !duration) {
-            resultsContainer.textContent = 'Please fill in all fields.';
-            return;
-        }
+  const resultsContainer = document.createElement('div');
+  resultsContainer.id = 'available-rooms-results';
+  resultsContainer.style.marginTop = '30px';
+  document.querySelector('.form-container').appendChild(resultsContainer);
 
-        const data = {
-            date,
-            time,
-            duration: Number(duration),
-            role: 'admin'
-        };
+  proceedBtn.addEventListener('click', async function (e) {
+    e.preventDefault();
+    resultsContainer.innerHTML = '';
 
-        try {
-            const response = await fetch('http://localhost:8080/api/rooms/available-rooms', {
+    const date = dateInput.value;
+    const time = timeInput.value;
+    const duration = durationInput.value;
 
+    if (!date || !time || !duration) {
+      resultsContainer.textContent = 'Please fill in all fields.';
+      return;
+    }
+
+    const data = {
+      date,
+      time,
+      duration: Number(duration),
+      role,
+      userId: parseInt(userId)
+    };
+
+    try {
+      const response = await fetch('http://localhost:8080/api/rooms/available-rooms', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (!response.ok) throw new Error('Failed to fetch available rooms.');
+
+      const rooms = await response.json();
+
+      if (Array.isArray(rooms) && rooms.length > 0) {
+        const list = document.createElement('ul');
+        rooms.forEach(room => {
+          const li = document.createElement('li');
+          li.textContent = room;
+          li.style.cursor = 'pointer';
+          li.style.padding = '8px 0';
+          li.style.transition = 'background 0.2s';
+
+          li.addEventListener('mouseenter', () => li.style.background = '#e8ddd4');
+          li.addEventListener('mouseleave', () => li.style.background = '');
+
+          li.addEventListener('click', async () => {
+            resultsContainer.innerHTML = 'Booking room...';
+
+            try {
+              const bookRes = await fetch('http://localhost:8080/api/rooms/book-room', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                  'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(data)
-            });
+                body: JSON.stringify({
+                  room,
+                  date,
+                  time,
+                  duration: Number(duration),
+                  role,
+                  userId: parseInt(userId)
+                })
+              });
 
-            if (!response.ok) {
-                throw new Error('Failed to fetch available rooms.');
+              const bookReply = await bookRes.json();
+
+              if (!bookRes.ok || bookReply.error) { throw new Error(bookReply.error || 'Booking failed.');
+
+              }
+        if (bookReply.message?.toLowerCase().includes("sent to admin")) {
+           resultsContainer.innerHTML = `<span style='color:green;'>${bookReply.message}</span>`;
+          } else if (bookReply.message?.toLowerCase().includes("booked")) {
+            resultsContainer.innerHTML = `<span style='color:green;'>${bookReply.message}</span>`;
+          } else {
+                resultsContainer.innerHTML = `<span style='color:orange;'>${bookReply.message || "Unknown booking result."}</span>`;
+                }
+
+            } catch (err) {
+              resultsContainer.innerHTML = `<span style='color:red;'>Error: ${err.message}</span>`;
             }
+          });
 
-            const rooms = await response.json();
+          list.appendChild(li);
+        });
 
-            if (Array.isArray(rooms) && rooms.length > 0) {
-                const list = document.createElement('ul');
-                rooms.forEach(room => {
-                    const li = document.createElement('li');
-                    li.textContent = room;
-                    li.style.cursor = 'pointer';
-                    li.style.padding = '8px 0';
-                    li.style.transition = 'background 0.2s';
-                    li.addEventListener('mouseenter', () => li.style.background = '#e8ddd4');
-                    li.addEventListener('mouseleave', () => li.style.background = '');
-                    li.addEventListener('click', async () => {
-                    
-                        resultsContainer.innerHTML = 'Booking room...';
-                        try {
-                            const bookRes = await fetch('http://localhost:8080/api/rooms/book-room', {
+        resultsContainer.innerHTML = '<h3>Available Rooms (click to book):</h3>';
+        resultsContainer.appendChild(list);
+      } else {
+        resultsContainer.textContent = 'No available rooms for the selected date and time.';
+      }
 
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    room,
-                                    date,
-                                    time,
-                                    duration: Number(duration),
-                                    role: 'admin'
-                                })
-                            });
-                            if (!bookRes.ok) throw new Error('Booking failed.');
-                            const bookReply = await bookRes.json();
-                            resultsContainer.innerHTML = `<span style='color:green;'>Room <b>${room}</b> successfully booked!</span>`;
-                        } catch (err) {
-                            resultsContainer.innerHTML = `<span style='color:red;'>Error: ${err.message}</span>`;
-                        }
-                    });
-                    list.appendChild(li);
-                });
-                resultsContainer.innerHTML = '<h3>Available Rooms (click to book):</h3>';
-                resultsContainer.appendChild(list);
-            } else {
-                resultsContainer.textContent = 'No available rooms for the selected date and time.';
-            }
-        } catch (err) {
-            resultsContainer.textContent = 'Error: ' + err.message;
-        }
-    });
-}); 
+    } catch (err) {
+      resultsContainer.textContent = 'Error: ' + err.message;
+    }
+  });
+});

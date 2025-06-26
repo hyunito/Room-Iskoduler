@@ -6,6 +6,16 @@ public class RoomBookingPayload {
     private String time;
     private int duration;
     private String role;
+    private int userId;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
 
     public String getRoom() { return room; }
     public void setRoom(String room) { this.room = room; }
