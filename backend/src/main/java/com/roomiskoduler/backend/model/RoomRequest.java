@@ -15,8 +15,13 @@ public class RoomRequest {
     private String chosenRoom;
     private int numberOfStudents;
     private int requestId;
+    private Time endTime;
+
+    public Time getEndTime() { return endTime; }
+    public void setEndTime(Time endTime) { this.endTime = endTime; }
 
     public int getRequestId() {
+
         return requestId;
     }
 

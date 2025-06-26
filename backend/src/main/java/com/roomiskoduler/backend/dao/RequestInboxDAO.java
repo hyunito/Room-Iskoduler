@@ -166,11 +166,11 @@ public class RequestInboxDAO {
             bookStmt.setString(2, request.getChosenRoom());
             bookStmt.setDate(3, request.getBookingDate());
             bookStmt.setTime(4, request.getStartTime());
-            bookStmt.setTime(5, request.calculateEndTime());
+            bookStmt.setTime(5, request.getEndTime());
+
             bookStmt.executeUpdate();
 
-            PreparedStatement updateStatus = conn.prepareStatement(
-                    "UPDATE inbox_requests SET status = 'approved' WHERE user_id = ? AND room_name = ? AND booking_date = ?");
+            PreparedStatement updateStatus = conn.prepareStatement("UPDATE inbox_requests SET status = 'approved' WHERE user_id = ? AND room_name = ? AND booking_date = ?");
             updateStatus.setInt(1, request.getUserId());
             updateStatus.setString(2, request.getChosenRoom());
             updateStatus.setDate(3, request.getBookingDate());
@@ -254,6 +254,8 @@ public class RequestInboxDAO {
                 req.setChosenRoom(rs.getString("room_name"));
                 req.setBookingDate(rs.getDate("booking_date"));
                 req.setStartTime(rs.getTime("start_time"));
+                req.setEndTime(rs.getTime("end_time"));
+
 
                 return req;
             }
